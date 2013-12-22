@@ -3,15 +3,21 @@ module Mapper
   # responsible for loading price-lists and comparing them
   class PriceManager
     attr_reader :prices
-    def initialize(*filenames)
+    def initialize(*options)
       @prices = Array.new # <= array of Price objects
       @mutex = Mutex.new # <= for synchronization between threads
       @timeMeasure = Hash.new # <= for measuring block execution
-      define_prices_extensions
-      (filenames.empty?) ?  load_from_dir("prices") : loadPrices(filenames)
+      @price_extensions = ["xlsx"]#, "xlsx"]
+      default_options = {:dir=>"prices"}
+      #p *options
+      #define_prices_extensions
+      (options.empty?) ? @options = default_options : @options = options[0] # <= default value
+      load_from_dir
+      #(options.empty?) ?  load_from_dir : loadPrices(@options[:filenames])
     end
     #зчитує файли з потрібною директорії
-    def load_from_dir dir
+    def load_from_dir *dir
+      (dir.empty?) ? dir = @options[:dir] : dir = dir[0]
       Dir.chdir(dir);
       extensions = @price_extensions.join(",")
       #p Dir["*"]
@@ -21,9 +27,10 @@ module Mapper
     end
     # приймає масив прайсів
     def load_prices(filenames)
-      #p "is array: #{filenames.kind_of?(Array)}"
-      #p "is empty: #{filenames.empty?}"
+      p "is array: #{filenames.kind_of?(Array)}"
+      p "is empty: #{filenames.empty?}"
       #перевіряємо чи це масив
+      p filenames
       raise ArgumentError, 'must be array of files #{filenames.kind_of?}' unless filenames.kind_of?(Array) 
       #витягуємо зміст прайс-листа для подальшої обробки
       time_load_prices = Time.now
@@ -31,11 +38,16 @@ module Mapper
       puts Dir.pwd
       threads = filenames.each do |filename|
         p "Filename now is procesed: #{filename}"
+        reader = PriceReader.new filename
+        reader.parse
+        next
         #! Виміряв час з потоками та без, різниця невелика 
         #t = Thread.new do # <= UNCOMMENT
         data = get_data_from_price(filename)
         # @mutex.synchronize do # <= UNCOMMENT
-        @prices << Price.new(filename, data)
+        p "Filename: #{filename} type: #{filename.class}"
+        p "Data type: #{data.class}"
+        @prices << Price.new(filename, data) if filename.kind_of?(String) and data.nil? == false
         # end # <= UNCOMMENT
         #end # <= UNCOMMENT
         #t.join # <= UNCOMMENT
@@ -56,7 +68,7 @@ module Mapper
         match = filename.match /((^[A-Z]+)_Reader).rb$/
         #p "Match #{match}"
         format = match[2].downcase
-        @price_readers << {file: match[0], klass: match[1], extension: format}
+        @price_readers << {:file=> match[0], :klass=> match[1], :extension=> format}
         @price_extensions << format
       end
       #p @price_extensions
@@ -88,10 +100,11 @@ module Mapper
   end
   class Price
     def initialize(filename, data)
-      @title, @data = filename, data
-      p "Successfully processed #{filename} with #{data.length} entities!"
+      @title, @data = filename, data[:table]
+      p "Successfully processed #{filename} with #{@data.length} entities!"
+      p @data
     end
   end
 end
 
-Mapper::PriceManager.new 
+Mapper::PriceManager.new({:dir=>"prices/test"})
