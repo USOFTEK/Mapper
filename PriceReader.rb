@@ -54,13 +54,13 @@ class PriceReader
         break if check_headers_match
      end
   end
+  #for default headers are in the head of the price 
   def define_headers
+    #from head to bottom
     @size[:first_row].upto(@size[:last_row]) do |line|
       find_header_in_line(line)
       break if @data[:line] # <= якщо знайдений хоча б один заголовок, припиняємо пошуки строки
     end 
-    #get_headers_match_results
-    #p @data
     @data
   end
   #Витягує інформацію відносно заголовків
@@ -70,8 +70,9 @@ class PriceReader
     # обєднати їх у загальну групу головний потік має стільки потомків
     # скільки заголовків у прайсі
     # тут буде паралельна обробка даних
-   start_line = @data[:line] + 1
-      #@threads << Thread.new do |value|
+    # якщо виникне помилка у будь-якому потоці всі будуть про це знати
+    #Thread.abort_on_exception = true 
+   start_line = @data[:line] + 1 # піля заголовків йдуть потрібні дані
         start_line.upto(@size[:last_row]) do |line|
           hash, flag = Hash.new, true
           @data[:headers].each do |header, value|
@@ -84,8 +85,8 @@ class PriceReader
             end
           end
           @data[:results] << hash if flag
-      #end
     end
-    p @data[:results][0..10]
+    #p @data[:results][0..10]
+    @data
   end
 end 
