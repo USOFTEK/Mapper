@@ -5,6 +5,7 @@ module Mapper
   require 'benchmark'
   require 'em-synchrony'
   require 'em-synchrony/mysql2'
+  require 'amqp'
 
   # responsible for loading price-lists and comparing them
   class PriceManager
@@ -13,6 +14,7 @@ module Mapper
       @prices = Array.new # <= array of Price objects
       @price_extensions = ["xlsx"] # <= csv, xlsx
       default_options = {:dir=>"prices", :test => false}
+      #TODO: налаштування бази винести в окремий файл db_confif.yaml
       @db_options = {:host => 'localhost', :username => 'root', :password => '238457', :database => 'test'}
       @concurrency = 4
       @pool_size = 4
@@ -20,7 +22,19 @@ module Mapper
       set_db_client
     end
     def start
-      EM.synchrony{load_from_dir}
+      EM.synchrony do
+          AMQP.start do |connection|
+            puts "AMQP started"
+            channel = AMQP::Channel.new connection
+            queue = channel.queue("rabbit.mapper", :auto_delete => true)
+            exchange = channel.direct("")
+            queue.subscribe do |payload|
+              puts "Received message #{payload}"
+              connection.close {EM.stop} if payload == "stop"
+            end
+          end
+          load_from_dir
+      end
     end
     #зчитує файли з потрібною директорії
     def load_from_dir *dir
@@ -58,6 +72,9 @@ module Mapper
       end
     end
     # занесення прайсів у базу
+    def escape_row(row)
+      @db.escape row || "NULL"
+    end
     def insert_data(data, filename)
       insertion = @db.aquery "INSERT INTO `prices` (`price`) VALUES ('#{filename}')"
       insertion.callback do 
@@ -66,16 +83,11 @@ module Mapper
           values = []
           query_string =  "INSERT INTO `products` (`code`, `title`, `article`, `price_id`) VALUES "
           data[:results].each do |row|
-            code = client.escape row[:code] || "NULL"
-            title = client.escape row[:title] || "NULL"
-            article = client.escape row[:article] || "NULL"
-            values << "('#{code}','#{title}','#{article}','#{price_id}')"
+            values << "('#{escape_row row[:code]}','#{escape_row row[:title]}','#{escape_row row[:article]}','#{price_id}')"
           end
           query = query_string + values.join(",")
           @db.aquery(query).callback {
             p "#{filename} successfully inserted!"
-            @counter += 1
-            EM.stop if @counter == @price_count
           }
       end
     end
@@ -83,13 +95,8 @@ module Mapper
 end
 #Todo: inherit parent constructor and its params
 class Test < Mapper::PriceManager
-  def empty_products
-    Price.delete_all
-    Product.delete_all
-  end
   def benchmark
     Benchmark.bm do |x|
-      x.report("delete"){empty_products}
       x.report("insert")do
         load_from_dir 
       end
