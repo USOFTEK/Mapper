@@ -10,10 +10,11 @@ class PriceReader
     @size = {:first_row => @s.first_row, :last_row => @s.last_row, :first_column => @s.first_column, :last_column => @s.last_column}
     setup_dictionary
 	end
+  # TODO: винести в конфіг dictionary.yaml
   def setup_dictionary
     @dictionary = {
       :code => ["код", "code"],
-      :title => ["назва","товар", "наименование", "title", "product", "продукт", "model", "модель", "номенклатура"],
+      :title => ["назва","товар","name", "наименование", "title", "product", "продукт", "модель", "номенклатура"],
       :article => ["артикул", "article"]
     }
   end
