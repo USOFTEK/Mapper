@@ -1,0 +1,51 @@
+
+development: &development
+    db:
+         storage:
+            adapter: em-mysql2
+            #em_adapter: em_mysql2
+            host: localhost
+            username: root
+            password: 238457
+            database: test
+            #checkout_timeout: 60,
+            #dead_connection_timeout: 120,
+            #pool: 2
+         shop:
+             adapter: em-mysql2
+             #em_adapter: em_mysql2
+             host: localhost
+             username: root
+             password: 238457
+             database: shop
+             #checkout_timeout: 60,
+             #dead_connection_timeout: 120,
+             #pool: 2
+    search:
+        host: http://localhost:8983/solr/mapper_development/
+    broker:
+        host: localhost:1234
+        queue_name: rabbit.mapper
+    concurrency: 
+        pool_size: 4
+        iterator_size: 4
+    extensions: 
+        - xlsx
+production: 
+    db:
+        adapter: mysql
+        host: localhost
+        username: root
+        password: 238457
+        database: test
+    search:
+        host: http://localhost:8983/solr/mapper_production/
+    broker:
+        host: localhost:1234
+        queue_name: rabbit.mapper
+    concurrency: 
+        pool_size: 4
+        iterator_size: 4
+    extensions: 
+        - xlsx
+    

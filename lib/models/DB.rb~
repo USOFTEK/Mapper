@@ -1,0 +1,21 @@
+# Загальний клас для бази Storage
+require 'em-synchrony'
+  class DB
+    def self.setup(config, db)
+      @@db = EventMachine::Synchrony::ConnectionPool.new(:size => config["concurrency"]["pool_size"]) do
+        Mysql2::EM::Client.new(config["db"][db])
+      end
+    end
+  end
+  class Storage < DB
+  end
+  class Shop < DB
+  end
+  class ShopProduct < Shop
+    def self.all
+      query = "SELECT up.product_id, name, code, model FROM `uts_product` as up INNER JOIN `uts_product_description` as upd ON up.product_id = upd.product_id LIMIT 5"
+      @@db.aquery query, :as => :array
+    end
+    
+    
+    end

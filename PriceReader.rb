@@ -2,23 +2,16 @@ require 'simple-spreadsheet'
 #визначає заголовки у прайсі та витянує дані
 class PriceReader
   attr_reader :data, :dictionary
-	def initialize(filename)
+	def initialize(filename, dictionary)
     @price = filename
     @threads = []
     @data = {:headers => {}, :line => nil, :results => []}
     @s = SimpleSpreadsheet::Workbook.read(@price)
     @size = {:first_row => @s.first_row, :last_row => @s.last_row, :first_column => @s.first_column, :last_column => @s.last_column}
-    setup_dictionary
+    @dictionary = dictionary
 	end
-  # TODO: винести в конфіг dictionary.yaml
-  def setup_dictionary
-    @dictionary = {
-      :code => ["код", "code"],
-      :title => ["назва","товар","name", "наименование", "title", "product", "продукт", "модель", "номенклатура"],
-      :article => ["артикул", "article"]
-    }
-  end
   #приймає комірку і проводить пошук на сумісність
+  #TODO: добавити пріоритет назв полів якщо є code i model тоді model
   def find_in_dictionary(cell, line, column)
     @dictionary.each do |key,value| # <= code: ["Код", "code"]
             next if @data[:headers] and @data[:headers][key]
@@ -87,7 +80,7 @@ class PriceReader
           end
           @data[:results] << hash if flag
     end
-    #p @data[:results][0..10]
+    p @data[:results][0..10]
     @data
   end
 end 

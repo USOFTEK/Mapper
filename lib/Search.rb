@@ -2,10 +2,11 @@ require 'rsolr-ext'
 
 class SearchWorker
   # <= TODO: include EM::Deferrable
-  def initialize(config)
+  def initialize(config, dictionary)
     p "Config for search: " + config["host"]
     @solr = RSolr::Ext.connect :url => config["host"]
     @distance = 0
+    @dictionary = dictionary
   end
   #кіл-ть документів в колекції
   def get_total_docs
@@ -45,10 +46,9 @@ class SearchWorker
   def minus query
     # 1. Визначити масив слів для віднімання
     # 2. Добавити знак мінус для слів у строці
-    minus_words = ["для", "в", "арт.", "з", "у", "c", "до"] # TODO: прийменники винести в конфіги окремі
     result = query.split(" ").map! do |word|
        word = word.downcase # TODO: downcase для українських та рос. слів
-       matched = minus_words.join(",").match(/#{word}/)
+       matched = @dictionary.join(",").match(/#{word}/)
        (matched) ?  word = "-#{word}" : word
     end
     p result

@@ -1,0 +1,7 @@
+require_relative "connection.rg"
+
+class Price < ActiveRecord::Base
+	establish_connection config
+	has_many :products
+end
+

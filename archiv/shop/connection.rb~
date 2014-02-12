@@ -1,0 +1,16 @@
+require "em-synchrony/activerecord"
+require "yaml"
+
+config = YAML.load_file('../../config.yaml')["development"]["db"]["shop"]
+p config
+ActiveRecord::Base.establish_connection({
+	:adapter => config["adapter"],
+	:host => config["host"],
+	:username => config["username"],
+	:password => config["password"],
+	:database => config["database"],
+	:checkout_timeout => config["checkout_timeout"],
+	:dead_connection_timeout => config["dead_connection_timeout"],
+	:pool => config["pool"]
+})
+

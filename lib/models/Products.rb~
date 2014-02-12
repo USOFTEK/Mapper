@@ -1,0 +1,13 @@
+require_relative "connection.rb"
+
+class Product < ActiveRecord::Base
+	establish_connection {
+		adapter: 'em-mysql2',
+		host: 'localhost',
+		database: 'test',
+		username: 'root',
+		password: '238457'
+	}
+	#belongs_to :price
+end
+

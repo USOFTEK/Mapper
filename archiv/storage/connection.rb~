@@ -1,0 +1,6 @@
+require "em-synchrony/activerecord"
+require "yaml"
+
+config = YAML.load_file('../../config.yaml')["development"]["db"]["storage"]
+p config
+
