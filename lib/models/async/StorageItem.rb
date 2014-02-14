@@ -10,7 +10,7 @@ class StorageItem < NonBlockingDB
     @db.query("SELECT id,title,code FROM `products`", :as => :hash, :async => false).each {|row| row}
   end 
   def add(data, filename)
-   
+    
       price_id = @db.last_id
       values = []
       query_string =  "INSERT INTO `products` (`code`, `title`, `article`, `price_id`) VALUES "
@@ -19,5 +19,5 @@ class StorageItem < NonBlockingDB
       end
       query = query_string + values.join(",")
       @db.aquery(query)
-  end
+    end
 end

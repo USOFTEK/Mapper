@@ -8335,3 +8335,40 @@ INFO  - 2014-02-14 14:36:55.111; org.apache.solr.core.SolrCore; [mapper_developm
 INFO  - 2014-02-14 14:36:55.118; org.apache.solr.core.SolrCore; [mapper_development] webapp=/solr path=/admin/file/ params={file=admin-extra.html&_=1392381415049} status=0 QTime=0 
 INFO  - 2014-02-14 14:36:55.127; org.apache.solr.core.SolrCore; [mapper_development] webapp=/solr path=/admin/ping params={action=status&_=1392381415059&wt=json} status=503 QTime=10 
 INFO  - 2014-02-14 14:36:55.137; org.apache.solr.core.SolrCore; [mapper_development] webapp=/solr path=/admin/system params={_=1392381415039&wt=json} status=0 QTime=21 
+INFO  - 2014-02-14 16:12:27.749; org.eclipse.jetty.server.Server; Graceful shutdown SocketConnector@0.0.0.0:8983
+INFO  - 2014-02-14 16:12:32.965; org.eclipse.jetty.server.Server; Graceful shutdown o.e.j.w.WebAppContext{/solr,file:/home/nychos/UTeam/Mapper/lib/solr/example/solr-webapp/webapp/},/home/nychos/UTeam/Mapper/lib/solr/example/webapps/solr.war
+INFO  - 2014-02-14 16:12:33.968; org.apache.solr.core.CoreContainer; Shutting down CoreContainer instance=12335315
+INFO  - 2014-02-14 16:12:33.983; org.apache.solr.core.SolrCore; [solr]  CLOSING SolrCore org.apache.solr.core.SolrCore@10a4d6b
+INFO  - 2014-02-14 16:12:33.984; org.apache.solr.update.DirectUpdateHandler2; closing DirectUpdateHandler2{commits=0,autocommits=0,soft autocommits=0,optimizes=0,rollbacks=0,expungeDeletes=0,docsPending=0,adds=0,deletesById=0,deletesByQuery=0,errors=0,cumulative_adds=0,cumulative_deletesById=0,cumulative_deletesByQuery=0,cumulative_errors=0}
+INFO  - 2014-02-14 16:12:33.985; org.apache.solr.update.SolrCoreState; Closing SolrCoreState
+INFO  - 2014-02-14 16:12:33.986; org.apache.solr.update.DefaultSolrCoreState; SolrCoreState ref count has reached 0 - closing IndexWriter
+INFO  - 2014-02-14 16:12:33.986; org.apache.solr.update.DefaultSolrCoreState; closing IndexWriter with IndexWriterCloser
+INFO  - 2014-02-14 16:12:43.574; org.apache.solr.core.SolrCore; [solr] Closing main searcher on request.
+INFO  - 2014-02-14 16:12:43.853; org.apache.solr.core.CachingDirectoryFactory; Closing NRTCachingDirectoryFactory - 2 directories currently being tracked
+INFO  - 2014-02-14 16:12:45.633; org.apache.solr.core.CachingDirectoryFactory; looking to close /home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/solr/data/index [CachedDir<<refCount=0;path=/home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/solr/data/index;done=false>>]
+INFO  - 2014-02-14 16:12:45.634; org.apache.solr.core.CachingDirectoryFactory; Closing directory: /home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/solr/data/index
+INFO  - 2014-02-14 16:12:45.636; org.apache.solr.core.CachingDirectoryFactory; looking to close /home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/solr/data [CachedDir<<refCount=0;path=/home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/solr/data;done=false>>]
+INFO  - 2014-02-14 16:12:45.637; org.apache.solr.core.CachingDirectoryFactory; Closing directory: /home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/solr/data
+INFO  - 2014-02-14 16:12:45.638; org.apache.solr.core.SolrCore; [mapper_production]  CLOSING SolrCore org.apache.solr.core.SolrCore@19e1749
+INFO  - 2014-02-14 16:12:45.639; org.apache.solr.update.DirectUpdateHandler2; closing DirectUpdateHandler2{commits=0,autocommits=0,soft autocommits=0,optimizes=0,rollbacks=0,expungeDeletes=0,docsPending=0,adds=0,deletesById=0,deletesByQuery=0,errors=0,cumulative_adds=0,cumulative_deletesById=0,cumulative_deletesByQuery=0,cumulative_errors=0}
+INFO  - 2014-02-14 16:12:45.641; org.apache.solr.update.SolrCoreState; Closing SolrCoreState
+INFO  - 2014-02-14 16:12:45.642; org.apache.solr.update.DefaultSolrCoreState; SolrCoreState ref count has reached 0 - closing IndexWriter
+INFO  - 2014-02-14 16:12:45.643; org.apache.solr.update.DefaultSolrCoreState; closing IndexWriter with IndexWriterCloser
+INFO  - 2014-02-14 16:12:51.947; org.apache.solr.core.SolrCore; [mapper_production] Closing main searcher on request.
+INFO  - 2014-02-14 16:12:51.951; org.apache.solr.core.CachingDirectoryFactory; Closing NRTCachingDirectoryFactory - 2 directories currently being tracked
+INFO  - 2014-02-14 16:12:51.952; org.apache.solr.core.CachingDirectoryFactory; looking to close /home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/mapper_production/data [CachedDir<<refCount=0;path=/home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/mapper_production/data;done=false>>]
+INFO  - 2014-02-14 16:12:51.953; org.apache.solr.core.CachingDirectoryFactory; Closing directory: /home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/mapper_production/data
+INFO  - 2014-02-14 16:12:51.955; org.apache.solr.core.CachingDirectoryFactory; looking to close /home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/mapper_production/data/index [CachedDir<<refCount=0;path=/home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/mapper_production/data/index;done=false>>]
+INFO  - 2014-02-14 16:12:51.956; org.apache.solr.core.CachingDirectoryFactory; Closing directory: /home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/mapper_production/data/index
+INFO  - 2014-02-14 16:12:51.957; org.apache.solr.core.SolrCore; [mapper_development]  CLOSING SolrCore org.apache.solr.core.SolrCore@17f676a
+INFO  - 2014-02-14 16:12:51.958; org.apache.solr.update.DirectUpdateHandler2; closing DirectUpdateHandler2{commits=0,autocommits=0,soft autocommits=0,optimizes=0,rollbacks=0,expungeDeletes=0,docsPending=0,adds=0,deletesById=0,deletesByQuery=0,errors=0,cumulative_adds=0,cumulative_deletesById=0,cumulative_deletesByQuery=0,cumulative_errors=0}
+INFO  - 2014-02-14 16:12:51.959; org.apache.solr.update.SolrCoreState; Closing SolrCoreState
+INFO  - 2014-02-14 16:12:51.960; org.apache.solr.update.DefaultSolrCoreState; SolrCoreState ref count has reached 0 - closing IndexWriter
+INFO  - 2014-02-14 16:12:51.961; org.apache.solr.update.DefaultSolrCoreState; closing IndexWriter with IndexWriterCloser
+INFO  - 2014-02-14 16:12:52.415; org.apache.solr.core.SolrCore; [mapper_development] Closing main searcher on request.
+INFO  - 2014-02-14 16:12:52.419; org.apache.solr.core.CachingDirectoryFactory; Closing NRTCachingDirectoryFactory - 2 directories currently being tracked
+INFO  - 2014-02-14 16:12:52.420; org.apache.solr.core.CachingDirectoryFactory; looking to close /home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/mapper_development/data/index [CachedDir<<refCount=0;path=/home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/mapper_development/data/index;done=false>>]
+INFO  - 2014-02-14 16:12:52.421; org.apache.solr.core.CachingDirectoryFactory; Closing directory: /home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/mapper_development/data/index
+INFO  - 2014-02-14 16:12:52.422; org.apache.solr.core.CachingDirectoryFactory; looking to close /home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/mapper_development/data [CachedDir<<refCount=0;path=/home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/mapper_development/data;done=false>>]
+INFO  - 2014-02-14 16:12:52.423; org.apache.solr.core.CachingDirectoryFactory; Closing directory: /home/nychos/UTeam/Mapper/lib/solr/example/example-DIH/solr/mapper_development/data
+INFO  - 2014-02-14 16:12:52.715; org.eclipse.jetty.server.handler.ContextHandler; stopped o.e.j.w.WebAppContext{/solr,file:/home/nychos/UTeam/Mapper/lib/solr/example/solr-webapp/webapp/},/home/nychos/UTeam/Mapper/lib/solr/example/webapps/solr.war

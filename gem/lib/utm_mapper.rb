@@ -34,6 +34,7 @@ module Mapper
     def run
       EM.synchrony do
         @logger.debug "Mapper has been started #{Time.now}"
+	#Fiber.new {PriceManager.new.load_prices}.resume
         AMQP.start do |connection|
           @logger.debug "AMQP started #{Time.now}"
           channel = AMQP::Channel.new connection
@@ -140,7 +141,7 @@ end
 require_relative 'PriceManager'
 require_relative 'PriceReader'
 
-#mapper = Mapper::Base.new
-#mapper.run
+mapper = Mapper::Base.new
+mapper.run
 
 

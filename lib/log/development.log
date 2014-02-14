@@ -15,3 +15,41 @@ DEBUG  Mapper::Base : Received message setup_storage
 DEBUG  Mapper::Base : Mapper has been started 2014-02-14 14:42:03 +0100
 DEBUG  Mapper::Base : AMQP started 2014-02-14 14:42:03 +0100
 DEBUG  Mapper::Base : Received message setup_storage
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 16:09:49 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 16:09:49 +0200
+DEBUG  Mapper::Base : Received message start
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 23:29:15 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 23:29:16 +0200
+DEBUG  Mapper::Base : Received message start
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 23:32:18 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 23:32:18 +0200
+DEBUG  Mapper::Base : Received message start
+DEBUG  PriceManager : Operation index has been successfully finished
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 23:34:28 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 23:34:28 +0200
+DEBUG  Mapper::Base : Received message start
+DEBUG  Mapper::Base : Mapper has been started 2014-02-15 00:02:43 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-15 00:02:43 +0200
+DEBUG  Mapper::Base : Received message start
+DEBUG  Mapper::Base : Mapper has been started 2014-02-15 00:06:09 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-15 00:06:09 +0200
+DEBUG  Mapper::Base : Received message start
+DEBUG  Mapper::Base : Mapper has been started 2014-02-15 00:06:25 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-15 00:06:25 +0200
+DEBUG  Mapper::Base : Received message start
+DEBUG  Mapper::Base : Mapper has been started 2014-02-15 00:07:16 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-15 00:07:16 +0200
+DEBUG  Mapper::Base : Received message start
+DEBUG  Mapper::Base : Mapper has been started 2014-02-15 00:18:09 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-15 00:18:09 +0200
+DEBUG  Mapper::Base : Received message start
+DEBUG  PriceManager : Operation index has been successfully finished
+DEBUG  Mapper::Base : Mapper has been started 2014-02-15 00:22:41 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-15 00:22:41 +0200
+DEBUG  Mapper::Base : Received message start
+DEBUG  Mapper::Base : Mapper has been started 2014-02-15 00:24:29 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-15 00:24:29 +0200
+DEBUG  Mapper::Base : Mapper has been started 2014-02-15 00:24:51 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-15 00:24:51 +0200
+DEBUG  Mapper::Base : Mapper has been started 2014-02-15 00:25:46 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-15 00:25:47 +0200
