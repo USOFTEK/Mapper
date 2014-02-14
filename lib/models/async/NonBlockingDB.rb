@@ -1,5 +1,4 @@
 # Загальний клас для баз даних
-require 'em-mysqlplus'
 require 'em-synchrony'
 
 class NonBlockingDB

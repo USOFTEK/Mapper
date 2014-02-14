@@ -23,7 +23,7 @@ class StorageBase < ActiveRecord::Base
     "test."
   end
   def self.setup
-    FileUtils.cd "lib/migrations"
+    FileUtils.cd "migrations"
     Dir.glob("*.rb").each do |file|
       require_relative "#{Dir.pwd}/#{file}"
       klass_name = file.split(".")[0]

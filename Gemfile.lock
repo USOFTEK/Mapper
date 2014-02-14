@@ -1,0 +1,67 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activerecord (2.3.18)
+      activesupport (= 2.3.18)
+    activesupport (2.3.18)
+    amq-protocol (1.9.2)
+    amqp (1.3.0)
+      amq-protocol (>= 1.9.2)
+      eventmachine
+    async_sinatra (1.1.0)
+      rack (>= 1.4.1)
+      sinatra (>= 1.3.2)
+    builder (3.2.2)
+    em-synchrony (1.0.3)
+      eventmachine (>= 1.0.0.beta.1)
+    eventmachine (1.0.3)
+    little-plugger (1.1.3)
+    logging (1.8.2)
+      little-plugger (>= 1.1.3)
+      multi_json (>= 1.8.4)
+    mini_portile (0.5.2)
+    multi_json (1.8.4)
+    mysql2 (0.3.15)
+    nokogiri (1.6.1)
+      mini_portile (~> 0.5.0)
+    rack (1.5.2)
+    rack-protection (1.5.2)
+      rack
+    roo (1.11.2)
+      nokogiri
+      rubyzip
+      spreadsheet (> 0.6.4)
+    rsolr (1.0.9)
+      builder (>= 2.1.2)
+    rsolr-ext (1.0.3)
+      rsolr (>= 1.0.2)
+    ruby-ole (1.2.11.7)
+    rubyXL (1.2.5)
+    rubyzip (1.1.0)
+    simple-spreadsheet (0.2.0)
+      roo (= 1.11.2)
+      rubyXL (= 1.2.5)
+      spreadsheet (= 0.6.5.9)
+    sinatra (1.4.4)
+      rack (~> 1.4)
+      rack-protection (~> 1.4)
+      tilt (~> 1.3, >= 1.3.4)
+    spreadsheet (0.6.5.9)
+      ruby-ole (>= 1.0)
+    tilt (1.4.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activerecord
+  amqp
+  async_sinatra
+  em-synchrony
+  eventmachine
+  logging
+  mysql2
+  rsolr
+  rsolr-ext
+  simple-spreadsheet
+  sinatra

@@ -2,3 +2,16 @@ DEBUG  Mapper::Base : Mapper has been started 2014-02-14 14:30:47 +0200
 DEBUG  Mapper::Base : AMQP started 2014-02-14 14:30:47 +0200
 DEBUG  Mapper::Base : Received message start_solr
 DEBUG  Mapper::Base : Received message start_solr
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 14:34:42 +0100
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 14:37:25 +0100
+DEBUG  Mapper::Base : AMQP started 2014-02-14 14:37:25 +0100
+DEBUG  Mapper::Base : Received message start
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 14:40:07 +0100
+DEBUG  Mapper::Base : AMQP started 2014-02-14 14:40:07 +0100
+DEBUG  Mapper::Base : Received message start
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 14:40:52 +0100
+DEBUG  Mapper::Base : AMQP started 2014-02-14 14:40:52 +0100
+DEBUG  Mapper::Base : Received message setup_storage
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 14:42:03 +0100
+DEBUG  Mapper::Base : AMQP started 2014-02-14 14:42:03 +0100
+DEBUG  Mapper::Base : Received message setup_storage

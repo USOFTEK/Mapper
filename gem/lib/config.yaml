@@ -6,7 +6,7 @@ development: &development
             active_adapter: mysql2
             host: localhost
             username: root
-            password: 238457
+            password: password
             database: storage
             #checkout_timeout: 60,
             #dead_connection_timeout: 120,
@@ -16,7 +16,7 @@ development: &development
              active_adapter: mysql2
              host: localhost
              username: root
-             password: 238457
+             password: password
              database: shop
              #checkout_timeout: 60,
              #dead_connection_timeout: 120,
