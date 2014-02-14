@@ -1,0 +1,4 @@
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 14:30:47 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 14:30:47 +0200
+DEBUG  Mapper::Base : Received message start_solr
+DEBUG  Mapper::Base : Received message start_solr

@@ -2,43 +2,49 @@ require "em-synchrony"
 require "active_record"
 require "em-synchrony/activerecord"
 
+class ActiveRecord::Base
+  def self.environment
+    "development"
+  end
+  def self.connect db
+    #(db.nil?) ? db = self.name.match(/^[A-Z][a-z]+/)[0].downcase : db = db[0]
+    self.table_name_prefix = "#{db}."
+    @config = YAML.load_file('config.yaml')[environment]["db"][db]
+    @config["adapter"] = @config["active_adapter"]
+    establish_connection @config
+  end
+end
+
 class StorageBase < ActiveRecord::Base
   
   self.abstract_class = true
+  connect "storage"
   def self.table_name_prefix
     "test."
   end
-  establish_connection ({
-      :adapter => 'mysql2',
-      :host => 'localhost',
-      :database => 'test',
-      :username => 'root',
-      :password => '238457',
-      :pool => 10
-    })
+  def self.setup
+    FileUtils.cd "lib/migrations"
+    Dir.glob("*.rb").each do |file|
+      require_relative "#{Dir.pwd}/#{file}"
+      klass_name = file.split(".")[0]
+      klass = Object.const_get(klass_name)
+      klass.connect self.connection_config
+      klass.up
+    end
+  end
 end
 
 class ShopBase < ActiveRecord::Base
   
   self.abstract_class = true
-  def self.table_name_prefix
-    "shop."
-  end
-  establish_connection ({
-      :adapter => 'mysql2',
-      :host => 'localhost',
-      :database => 'shop',
-      :username => 'root',
-      :password => '238457',
-      :pool => 10
-    })
+  connect "shop"
 end
 
 class Product < StorageBase
   
-	belongs_to :price
+  belongs_to :price
   has_one :comparison, :foreign_key => "storage_item_id", :dependent => :destroy
-   
+  
   def self.get_all
     select = "DISTINCT test.comparisons.id as id,test.products.id as storage_id,test.products.title as storage_title,test.products.code as storage_code,test.products.article as storage_article,test.comparisons.linked as linked,shop.uts_product.product_id as shop_id,shop.uts_product_description.name as shop_title,shop.uts_product.code as shop_code, shop.uts_product.model as shop_model"
     sql = Product.joins(:comparison => {:uts_product => :uts_product_description}).select(select).limit(20).to_sql
@@ -61,12 +67,12 @@ end
 class UtsProduct < ShopBase
   
   
-  default_scope {select("shop.uts_product.code as code,shop.uts_product.model as model, shop.uts_product_description.name as title").joins(:uts_product_description)}
-	self.table_name = "shop.uts_product"
+  #default_scope {select("shop.uts_product.code as code,shop.uts_product.model as model, shop.uts_product_description.name as title").joins(:uts_product_description)}
+  self.table_name = "shop.uts_product"
   #self.table_name_prefix = "shop."
     
-	self.primary_key = "product_id"
-	belongs_to :uts_product_description, :foreign_key => "product_id"
+  self.primary_key = "product_id"
+  belongs_to :uts_product_description, :foreign_key => "product_id"
   has_one :comparison, :foreign_key => "shop_item_id", :dependent => :destroy
   
 end

@@ -1,0 +1,16 @@
+<dataConfig>
+  <dataSource name="MySQL"
+	      type="JdbcDataSource" 
+              driver="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://localhost/shop" 
+              user="root" 
+              password="238457"/>
+  <document>
+    <entity name="id" 
+            query="select uts_product.product_id,name,code,model from uts_product inner join uts_product_description on uts_product.product_id = uts_product_description.product_id"
+	    datasource="MySQL">
+	<field column="product_id" name="id" />
+	<field column="name" name="title" />
+    </entity>
+  </document>
+ </dataConfig>

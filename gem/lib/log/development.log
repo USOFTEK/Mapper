@@ -1,0 +1,54 @@
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 11:08:17 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 11:08:17 +0200
+DEBUG  Mapper::Base : Received message start_search
+DEBUG  Mapper::Base : Received message start_search
+DEBUG  Mapper::Base : Received message stop_search
+DEBUG  Mapper::Base : Received message start_solr
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 11:15:33 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 11:15:33 +0200
+DEBUG  Mapper::Base : Received message start_webserver
+DEBUG  Mapper::Base : Received message setup_storage
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 11:16:34 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 11:16:34 +0200
+DEBUG  Mapper::Base : Received message start_webserver
+DEBUG  Mapper::Base : Received message setup_storage
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 11:18:51 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 11:18:51 +0200
+DEBUG  Mapper::Base : Received message start_webserver
+DEBUG  Mapper::Base : Received message setup_storage
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 11:20:05 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 11:20:05 +0200
+DEBUG  Mapper::Base : Received message setup_storage
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 11:21:10 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 11:21:10 +0200
+DEBUG  Mapper::Base : Received message setup_storage
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 11:25:01 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 11:25:01 +0200
+DEBUG  Mapper::Base : Received message setup_storage
+DEBUG  Mapper::Base : Received message start
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 11:30:51 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 11:30:51 +0200
+DEBUG  Mapper::Base : Received message start
+DEBUG  PriceManager : Operation index has been successfully finished
+DEBUG  Mapper::Base : Received message start_solr
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 11:32:56 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 11:32:56 +0200
+DEBUG  Mapper::Base : Received message start_solr
+DEBUG  Mapper::Base : Received message match
+DEBUG  Mapper::Base : Received message start_webserver
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 12:09:53 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 12:09:53 +0200
+DEBUG  Mapper::Base : Received message start_solr
+DEBUG  Mapper::Base : Received message index
+DEBUG  Mapper::Base : Received message match
+DEBUG  Mapper::Base : Received message start_webserver
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 12:21:22 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 12:21:22 +0200
+DEBUG  Mapper::Base : Received message start_webserver
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 12:21:47 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 12:21:47 +0200
+DEBUG  Mapper::Base : Received message start_webserver
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 13:43:24 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 13:43:24 +0200
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 13:54:02 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 13:54:02 +0200
