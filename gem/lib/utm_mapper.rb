@@ -20,8 +20,11 @@ module Mapper
     attr_accessor :working_dir
     def initialize
       @options = {:dir=>"prices/test", :env => 'development'}
-      @config = YAML.load_file(File.join(File.dirname(__FILE__),'config.yaml'))[@options[:env]]
-      @dictionary = YAML.load_file(File.join(File.dirname(__FILE__),'dictionary.yaml'))
+      config, dictionary = "config.yaml", "dictionary.yaml"
+      config = File.join(File.dirname(__FILE__),config) unless File.exists? config
+      dictionary = File.join(File.dirname(__FILE__),dictionary) unless File.exists? dictionary
+      @config = YAML.load_file(config)[@options[:env]]
+      @dictionary = YAML.load_file(dictionary)
       @working_dir = Dir.pwd
       register_async_models
       set_logger

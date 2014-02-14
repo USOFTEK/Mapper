@@ -52,3 +52,5 @@ DEBUG  Mapper::Base : Mapper has been started 2014-02-14 13:43:24 +0200
 DEBUG  Mapper::Base : AMQP started 2014-02-14 13:43:24 +0200
 DEBUG  Mapper::Base : Mapper has been started 2014-02-14 13:54:02 +0200
 DEBUG  Mapper::Base : AMQP started 2014-02-14 13:54:02 +0200
+DEBUG  Mapper::Base : Mapper has been started 2014-02-14 15:57:42 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-14 15:57:42 +0200

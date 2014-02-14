@@ -10,8 +10,8 @@ class ActiveRecord::Base
     #(db.nil?) ? db = self.name.match(/^[A-Z][a-z]+/)[0].downcase : db = db[0]
     self.table_name_prefix = "#{db}."
     config = "config.yaml"
-    config = "../#{config}" unless File.exists? config
-    @config = YAML.load_file(File.join(File.dirname(__FILE__), config))[environment]["db"][db]
+    config = File.join(File.dirname(__FILE__), config) unless File.exists? config
+    @config = YAML.load_file(config)[environment]["db"][db]
     @config["adapter"] = @config["active_adapter"]
     establish_connection @config
   end
