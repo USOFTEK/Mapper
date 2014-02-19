@@ -6,7 +6,9 @@ class NonBlockingDB
     set_db db
   end
   def set_db(db)
-    @config = YAML.load_file('config.yaml')["development"] if @config.nil?
+    config = "config.yaml"
+    config = File.join(File.dirname(__FILE__),config) unless File.exists? config
+    @config = YAML.load_file(config)["development"]
     @db = EventMachine::Synchrony::ConnectionPool.new(:size => @config["concurrency"]["pool_size"]) do
       Mysql2::EM::Client.new(@config["db"][db])
     end

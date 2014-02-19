@@ -20,8 +20,11 @@ module Mapper
     attr_accessor :working_dir
     def initialize
       @options = {:dir=>"prices/test", :env => 'development'}
-      @config = YAML.load_file('config.yaml')[@options[:env]]
-      @dictionary = YAML.load_file('dictionary.yaml')
+      config, dictionary = "config.yaml", "dictionary.yaml"
+      config = File.join(File.dirname(__FILE__),config) unless File.exists? config
+      dictionary = File.join(File.dirname(__FILE__),dictionary) unless File.exists? dictionary
+      @config = YAML.load_file(config)[@options[:env]]
+      @dictionary = YAML.load_file(dictionary)
       @working_dir = Dir.pwd
       register_async_models
       set_logger
@@ -31,7 +34,7 @@ module Mapper
     def run
       EM.synchrony do
         @logger.debug "Mapper has been started #{Time.now}"
-        Fiber.new{PriceManager.new.load_prices}.resume
+        #Fiber.new {PriceManager.new.load_prices}.resume
         AMQP.start do |connection|
           @logger.debug "AMQP started #{Time.now}"
           channel = AMQP::Channel.new connection
@@ -90,7 +93,7 @@ module Mapper
           STDIN.reopen('/dev/null')
           STDOUT.reopen('/dev/null')
           STDERR.reopen(STDOUT)
-          FileUtils.cd 'lib/solr/example' do
+          FileUtils.cd 'solr/example' do
             command = ["java"]
             command << "-Dsolr.solr.home=./example-DIH/solr/"
             command << "-jar"
@@ -109,20 +112,48 @@ module Mapper
        
       EM::Synchrony::FiberIterator.new(@storage_item.all, @config["concurrency"]["iterator_size"]).each do |product, iter|
         begin
+          (product["code"].empty?) ? storage_item_model =  product["article"] : storage_item_model =  product["code"]
           response = @search_worker.find({
               :title => product["title"],
-              :model => product["code"]}
+              :model => storage_item_model}
           )
           if response[:count] > 0
-            shop_product_id = response.docs[0]["id"].to_i
+            shop_item = response.docs[0] # <= беремо тільки перший знайдений товар
+            shop_product_id = shop_item["id"].to_i
             price_product_id = product["id"]
-            #TODO: precision = response[:precision] визначення точності результату пошуку
-            @storage_comparison.link(price_product_id, shop_product_id).errback {|error|p error}
+            p shop_item
+            linked = check_models(shop_item["model"], storage_item_model) || check_titles(shop_item["title"], product["title"])
+            p "Linked: #{linked}"
+            @storage_comparison.link(price_product_id, shop_product_id, linked).errback {|error|p error}
           end
         rescue => e
           p e
         end
       end
+    end
+    #TODO: вдосконалити
+    def check_titles(shop_item_title, storage_item_title)
+      shop_item_title.downcase!
+      storage_item_title.downcase!
+      if (shop_item_title.size == storage_item_title.size) 
+        shop_item_title == storage_item_title
+      elsif shop_item_title.size > storage_item_title.size
+        shop_item_title.include? storage_item_title
+      else
+        storage_item_title.include? shop_item_title
+      end
+    end
+    #порівняння моделей товарів
+    def check_models(shop_item_model, storage_item_model)
+      return false if (shop_item_model.nil? || shop_item_model.empty? || shop_item_model == "NULL") || (storage_item_model.empty? || storage_item_model.nil? || storage_item_model == "NULL")
+      p "#{shop_item_model} - #{storage_item_model}"
+      begin
+        shop_item_model["-"] = "" if shop_item_model.index "-"
+        storage_item_model["-"] = "" if storage_item_model.index "-"
+      rescue => e
+        p e
+      end
+      shop_item_model.downcase == storage_item_model.downcase
     end
     def set_logger
       @logger = Logging.logger[self.class.name]

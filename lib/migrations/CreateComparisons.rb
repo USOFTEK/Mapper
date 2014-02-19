@@ -12,13 +12,19 @@ class CreateComparisons < ActiveRecord::Migration
       t.column :precision, :integer
       t.column :linked, :boolean, :default => false
       t.timestamps 
-     end
-	add_index :comparisons, :storage_item_id
-  add_index :comparisons, :shop_item_id
     end
-    def self.down
+    add_index :comparisons, :storage_item_id
+    add_index :comparisons, :shop_item_id
+  end
+  def self.down
+    begin
       drop_table :comparisons
+    rescue ActiveRecord::StatementInvalid => e
+      p e.message
+    rescue Mysql2::Error => e
+      p e.message
     end
+  end
 end
 
 

@@ -17,7 +17,13 @@ class CreateProducts < ActiveRecord::Migration
     add_index :products, :price_id
   end
   def self.down
-    drop_table :products
+    begin
+      drop_table :products
+    rescue ActiveRecord::StatementInvalid => e
+      p e.message
+    rescue Mysql2::Error => e
+      p e.message
+    end
   end
 end
 

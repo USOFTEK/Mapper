@@ -7,7 +7,7 @@ development: &development
             host: localhost
             username: root
             password: 238457
-            database: test
+            database: storage
             #checkout_timeout: 60,
             #dead_connection_timeout: 120,
             #pool: 5

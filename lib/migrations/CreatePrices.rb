@@ -10,7 +10,13 @@ class CreatePrices < ActiveRecord::Migration
 			t.timestamps
 		end
 	end
-	def self.down
-		drop_table :prices
-	end
+  def self.down
+    begin
+      drop_table :prices
+    rescue ActiveRecord::StatementInvalid => e
+      p e.message
+    rescue Mysql2::Error => e
+      p e.message
+    end
+  end
 end

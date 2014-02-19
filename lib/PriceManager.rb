@@ -31,7 +31,7 @@ class PriceManager < Mapper::Base
           EM.defer(
             proc do
               @price.add(filename).callback do
-                result = @storage_item.add(data, filename)
+                result = Fiber.new {@storage_item.add(data, filename)}.resume
                 result.callback do
                   @counter += 1;
                   p "#{filename} #{@counter} / #{@price_count}successfully added"

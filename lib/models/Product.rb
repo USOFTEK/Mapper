@@ -9,7 +9,9 @@ class ActiveRecord::Base
   def self.connect db
     #(db.nil?) ? db = self.name.match(/^[A-Z][a-z]+/)[0].downcase : db = db[0]
     self.table_name_prefix = "#{db}."
-    @config = YAML.load_file('config.yaml')[environment]["db"][db]
+    config = "config.yaml"
+    config = File.join(File.dirname(__FILE__), config) unless File.exists? config
+    @config = YAML.load_file(config)[environment]["db"][db]
     @config["adapter"] = @config["active_adapter"]
     establish_connection @config
   end
@@ -20,7 +22,7 @@ class StorageBase < ActiveRecord::Base
   self.abstract_class = true
   connect "storage"
   def self.table_name_prefix
-    "test."
+    "storage."
   end
   def self.setup
     FileUtils.cd "migrations"
@@ -46,8 +48,8 @@ class Product < StorageBase
   has_one :comparison, :foreign_key => "storage_item_id", :dependent => :destroy
   
   def self.get_all
-    select = "DISTINCT test.comparisons.id as id,test.products.id as storage_id,test.products.title as storage_title,test.products.code as storage_code,test.products.article as storage_article,test.comparisons.linked as linked,shop.uts_product.product_id as shop_id,shop.uts_product_description.name as shop_title,shop.uts_product.code as shop_code, shop.uts_product.model as shop_model"
-    sql = Product.joins(:comparison => {:uts_product => :uts_product_description}).select(select).limit(20).to_sql
+    select = "DISTINCT storage.comparisons.id as id,storage.products.id as storage_id,storage.products.title as storage_title,storage.products.code as storage_code,storage.products.article as storage_article,storage.comparisons.linked as linked,shop.uts_product.product_id as shop_id,shop.uts_product_description.name as shop_title,shop.uts_product.code as shop_code, shop.uts_product.model as shop_model"
+    sql = Product.joins(:comparison => {:uts_product => :uts_product_description}).select(select).to_sql
     self.connection.execute(sql)
   end
 end
@@ -89,7 +91,7 @@ end
 #p Product.first
 #p "============================"
 #p Product.joins(:comparison).to_sql
-#select = "DISTINCT test.products.id as storage_id,test.products.title as storage_title,test.products.code as storage_code,test.products.article as storage_article,shop.uts_product.product_id as shop_id,shop.uts_product_description.name as shop_title,shop.uts_product.code as shop_code, shop.uts_product.model as shop_model"
+#select = "DISTINCT storage.products.id as storage_id,storage.products.title as storage_title,storage.products.code as storage_code,storage.products.article as storage_article,shop.uts_product.product_id as shop_id,shop.uts_product_description.name as shop_title,shop.uts_product.code as shop_code, shop.uts_product.model as shop_model"
 #p Product.joins(:comparison => {:uts_product => :uts_product_description}).select(select).to_sql
 #p "============================"
 #UtsProduct.get_all
