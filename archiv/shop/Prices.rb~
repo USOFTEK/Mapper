@@ -1,6 +1,0 @@
-require "em-synchrony/activerecord"
-
-class Price < ActiveRecord::Base
-	has_many :products
-end
-

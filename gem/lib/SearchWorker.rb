@@ -57,13 +57,15 @@ class SearchWorker
     p result
     result.join(" ")
   end
+  def cut_float str
+     (str.index ".") ? str.split(".")[0] : str
+  end
   def find(fields)
     raise ArgumentError "No query given" if fields.nil?
     raise ArgumentError "Title is empty!" if fields[:title].empty?
-    #TODO: implement Booster for boosting
     options = Hash.new
     options[:title] = boost(escape(fields[:title]))
-    options[:model] = boost(escape(fields[:model]), 1000) unless fields[:model].nil? || fields[:model].empty?
+    options[:model] = boost(escape(cut_float fields[:model]), 1000) unless fields[:model].nil? || fields[:model].empty?
     
     solr_params = {
       :queries => options,

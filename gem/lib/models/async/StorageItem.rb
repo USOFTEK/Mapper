@@ -7,7 +7,7 @@ class StorageItem < NonBlockingDB
     @db.escape row || "NULL"
   end
   def all
-    @db.query("SELECT id,title,code FROM `products`", :as => :hash, :async => false).each {|row| row}
+    @db.query("SELECT id,title,code,article FROM `products`", :as => :hash, :async => false).each {|row| row}
   end 
   def add(data, filename)
    

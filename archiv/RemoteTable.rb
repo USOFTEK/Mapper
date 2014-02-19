@@ -1,3 +1,0 @@
-require 'remote_table'
-
-

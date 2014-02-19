@@ -53,3 +53,9 @@ DEBUG  Mapper::Base : Mapper has been started 2014-02-15 00:24:51 +0200
 DEBUG  Mapper::Base : AMQP started 2014-02-15 00:24:51 +0200
 DEBUG  Mapper::Base : Mapper has been started 2014-02-15 00:25:46 +0200
 DEBUG  Mapper::Base : AMQP started 2014-02-15 00:25:47 +0200
+DEBUG  Mapper::Base : Mapper has been started 2014-02-17 15:34:56 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-17 15:34:56 +0200
+DEBUG  PriceManager : Operation index has been successfully finished
+DEBUG  Mapper::Base : Mapper has been started 2014-02-17 16:11:49 +0200
+DEBUG  Mapper::Base : AMQP started 2014-02-17 16:11:49 +0200
+DEBUG  Mapper::Base : Received message start_solr
