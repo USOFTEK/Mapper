@@ -1,13 +1,13 @@
 Gem::Specification.new do |s|
   s.name        = 'utm_mapper'
-  s.version     = '0.7.0'
+  s.version     = '0.8.0'
   s.licenses    = ['MIT']
   s.summary     = "Mapper summary"
   s.description = "Much longer explanation of summary"
   s.authors     = ["Nychka Yaroslav"]
   s.email       = 'nychka08@yandex.ru'
   #s.files       = ["lib/utm_mapper_new.rb", "lib/PriceManager.rb", "lib/PriceReader.rb", "lib/SearchWorker.rb"]
-  s.files = Dir['lib/*.rb'] + Dir['lib/*.yaml'] + Dir['lib/models/*.rb'] + Dir['lib/models/async/*.rb'] + Dir['lib/views/*.erb'] + Dir['lib/public/css/*.css'] + Dir['lib/public/js/*.js']
+  s.files = Dir['lib/*.rb'] + Dir['config/*.yaml'] + Dir['app/models/*.rb'] + Dir['app/models/async/*.rb'] + Dir['app/views/*.erb'] + Dir['app/assets/stylesheets/*.css'] + Dir['app/assets/javascripts/*.js']
   s.homepage    = 'https://rubygems.org/gems/example'
   s.post_install_message = "Thanks for installing!"
   s.requirements << "mysql2"

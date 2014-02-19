@@ -1,8 +1,0 @@
-class RenameProductComparisonsToComparisons< ActiveRecord:Migration
-    def self.up
-        rename_table :product_comparisons, :comparisons
-    end 
-    def self.down
-        rename_table :comparisons, :product_comparisons
-    end
- end

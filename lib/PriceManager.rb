@@ -1,4 +1,3 @@
-
 # responsible for loading price-lists and comparing them
 class PriceManager < Mapper::Base
   

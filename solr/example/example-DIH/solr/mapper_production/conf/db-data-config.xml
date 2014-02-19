@@ -1,0 +1,18 @@
+<dataConfig>
+     <dataSource name="MongoDB" 
+     		 type="MongoDataSource" 
+ 		 database="solr_db"
+		 host="localhost" />
+     <document name="Products">
+         <entity name="id"
+		 processor="MongoEntityProcessor"
+                 query="{}"
+                 collection="products"
+                 datasource="MongoDB"
+                 transformer="MongoMapperTransformer" >
+             <field column="title" name="title" mongoField="title"/>
+	     <field column="_id" name="_id" mongoField="_id"/>
+         </entity>
+     </document>
+</dataConfig>
+

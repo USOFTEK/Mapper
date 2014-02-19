@@ -6,6 +6,8 @@ class WebServer < Sinatra::Base
   register Sinatra::Async
   configure do
     set :threaded, false
+    set :root, "../app/" # <= TODO: for gem location
+    set :public_folder, Proc.new { File.join(root, "assets") }
   end
   get '/' do
     @title = "Home"

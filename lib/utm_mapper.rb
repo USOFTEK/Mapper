@@ -7,29 +7,30 @@ require 'yaml'
 require 'logging'
 
 require_relative 'SearchWorker'
-require_relative 'models/Product'
-require_relative 'models/async/NonBlockingDB'
-require_relative 'models/async/StorageItem'
-require_relative 'models/async/StoragePrice'
-require_relative 'models/async/StorageComparison'
-require_relative 'models/async/ShopItem'
+require_relative '../app/models/Product'
+require_relative '../app/models/async/NonBlockingDB'
+require_relative '../app/models/async/StorageItem'
+require_relative '../app/models/async/StoragePrice'
+require_relative '../app/models/async/StorageComparison'
+require_relative '../app/models/async/ShopItem'
 require_relative 'WebServer'
 
 module Mapper
   class Base
     attr_accessor :working_dir
     def initialize
-      @options = {:dir=>"prices/test", :env => 'development'}
-      config, dictionary = "config.yaml", "dictionary.yaml"
-      config = File.join(File.dirname(__FILE__),config) unless File.exists? config
-      dictionary = File.join(File.dirname(__FILE__),dictionary) unless File.exists? dictionary
-      @config = YAML.load_file(config)[@options[:env]]
-      @dictionary = YAML.load_file(dictionary)
-      @working_dir = Dir.pwd
+      @options = {:dir=>"../prices", :env => 'development'}
+      config, dictionary = "../config/config.yaml", "../config/dictionary.yaml"
+      @config = YAML.load_file(check_filename config)[@options[:env]]
+      @dictionary = YAML.load_file(check_filename dictionary)
+      @working_dir = File.dirname(__FILE__)
       register_async_models
       set_logger
       @search_worker = SearchWorker.new @config["search"], @dictionary["search"] # <= пошук
       Thread.abort_on_exception=true
+    end
+    def check_filename filename
+      (File.exists?(filename)) ? filename : File.join(@working_dir,filename)
     end
     def run
       EM.synchrony do
@@ -71,13 +72,13 @@ module Mapper
       @storage_comparison = StorageComparison.new "storage"
     end
     def stop_search_server
-      FileUtils.cd(working_dir) do
+      FileUtils.cd(@working_dir) do
         if File.exist?("solr_pid")
           begin
             pid = IO.readlines("solr_pid")[0].to_i
             Process.kill(0, pid)
           rescue => e 
-            STDERR.puts("Removing PID file at #{working_dir}")
+            STDERR.puts("Removing PID file at #{@working_dir}")
             FileUtils.rm "solr_pid"
             p e
           end
@@ -93,7 +94,7 @@ module Mapper
           STDIN.reopen('/dev/null')
           STDOUT.reopen('/dev/null')
           STDERR.reopen(STDOUT)
-          FileUtils.cd 'solr/example' do
+          FileUtils.cd '../solr/example' do
             command = ["java"]
             command << "-Dsolr.solr.home=./example-DIH/solr/"
             command << "-jar"
@@ -101,7 +102,9 @@ module Mapper
             exec(*command)
           end
         end
-        File.open("solr_pid", "w") {|file| file << pid}
+        FileUtils.cd(@working_dir) do
+          File.open("solr_pid", "w") {|file| file << pid}
+        end
         p "Solr is running on #{pid}"
       rescue => e
         p e
@@ -157,9 +160,10 @@ module Mapper
     end
     def set_logger
       @logger = Logging.logger[self.class.name]
+      filename = '../log/development.log'
       @logger.add_appenders(
         Logging.appenders.stdout,
-        Logging.appenders.file('log/development.log')
+        Logging.appenders.file(check_filename filename)
       )
       @logger.level = :debug
     end

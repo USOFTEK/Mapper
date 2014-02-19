@@ -1,4 +1,6 @@
 *.yaml
+log
+solr/example/logs
 *.gem
 *.rbc
 .bundle
