@@ -43,7 +43,7 @@ module Mapper
       (File.exists?(filename)) ? filename : File.join(@working_dir,filename)
     end
     def run
-      @output ||= STDOUT
+      @output ||= STDOUTcd
       #begin
       @output.print "Run, Forest, run!"
       #rescue
@@ -103,7 +103,7 @@ module Mapper
           command << "-Dsolr.solr.home=./example-DIH/solr/"
           command << "-jar"
           command << "start.jar"
-          pid = spawn(*command,:in=>'/dev/null', :out => '/dev/null', :err => '/dev/null')
+          pid = spawn(*command,:in=>'/dev/null',:err => :out)# :out => '/dev/null', :err => '/dev/null')
           p "Solr is running on #{pid}"
         end
       rescue => e

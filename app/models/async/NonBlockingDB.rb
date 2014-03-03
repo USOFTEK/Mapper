@@ -18,12 +18,6 @@ class NonBlockingDB
   def get_db
     @db
   end
-  def count
-      Fiber.new{@db.query("SELECT COUNT(*) FROM `#{@db_name}`", :as => :array, :async => false).each{|row| row}[0][0]}.resume
-  end
-  def is_empty?
-    Fiber.new{count == 0}.resume
-  end
 end
 
 

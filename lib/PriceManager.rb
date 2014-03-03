@@ -14,6 +14,10 @@ class PriceManager < Mapper::Base
     extensions = @config["extensions"].join(",")
     @filenames = Dir.glob("*.{#{extensions}}")
   end
+  def print message
+    @logger.debug message
+    @output.print message
+  end
   # приймає масив прайсів
   def load_prices(*params)
     
@@ -36,7 +40,7 @@ class PriceManager < Mapper::Base
                 result.callback do
                   @counter += 1;
                   p "#{filename} #{@counter} / #{@price_count}successfully added"
-                  @logger.debug "Operation index has been successfully finished" if @counter == @price_count
+                  print "Operation index has been successfully finished" if @counter == @price_count
                 end
                 result.errback{|error| p error}
               end
