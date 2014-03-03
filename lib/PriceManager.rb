@@ -1,5 +1,7 @@
 # responsible for loading price-lists and comparing them
 class PriceManager < Mapper::Base
+  attr_reader :dictionary
+  attr_accessor :search_worker
   
   def initialize
     super
@@ -43,7 +45,8 @@ class PriceManager < Mapper::Base
         end
         EM.defer(operation, callback)
       else
-        p "Price #{filename} already exists in database!"
+        @price_count -= 1
+        @output.print "Price #{filename} already exists in database!"
       end
     end
   end

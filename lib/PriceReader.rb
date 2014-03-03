@@ -18,7 +18,7 @@ class PriceReader
             value.each do |word|
               result = /^.*#{word}/i.match(cell) # <= правильно вибрати слово 
               if(result)
-                p "Cell #{cell} matched with #{key}: on line #{line} and column: #{column}"
+                #p "Cell #{cell} matched with #{key}: on line #{line} and column: #{column}"
                 @data[:headers][key] = {:line => line, :column => column, :cell => cell}
                 @data[:line] = line if @data[:line].nil?
               end
@@ -74,7 +74,8 @@ class PriceReader
           end
           @data[:results] << hash if flag
     end
-    p @data[:results][0..10]
+    #p @data[:results][0..10]
+    @data[:size] = @size
     @data
   end
 end 

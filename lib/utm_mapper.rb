@@ -5,6 +5,7 @@ require 'amqp'
 require 'fiber'
 require 'yaml'
 require 'logging'
+require 'net/http'
 
 require_relative 'SearchWorker'
 require_relative '../app/models/Product'
@@ -18,29 +19,44 @@ require_relative 'WebServer'
 module Mapper
   class Base
     attr_accessor :working_dir
+    attr_reader :storage_comparison, :storage_item
     def initialize
       @options = {:dir=>"../prices", :env => 'development'}
       config, dictionary = "../config/config.yaml", "../config/dictionary.yaml"
-      @config = YAML.load_file(check_filename config)[@options[:env]]
-      @dictionary = YAML.load_file(check_filename dictionary)
+      begin
+        @config = YAML.load_file(check_filename config)[@options[:env]]
+        @dictionary = YAML.load_file(check_filename dictionary)
+      rescue Errno::ENOENT => e
+        p e.message
+      end
       @working_dir = File.dirname(__FILE__)
       register_async_models
       set_logger
       @search_worker = SearchWorker.new @config["search"], @dictionary["search"] # <= пошук
       Thread.abort_on_exception=true
     end
+    def set_output output
+      @output = output
+    end
     def check_filename filename
+      raise ArgumentError 'filename is not defined' if filename.nil?
       (File.exists?(filename)) ? filename : File.join(@working_dir,filename)
     end
     def run
+      @output ||= STDOUT
+      #begin
+      @output.print "Run, Forest, run!"
+      #rescue
+      #  @output = STDOUT
+      #  retry
+      #end
       EM.synchrony do
         @logger.debug "Mapper has been started #{Time.now}"
-        #Fiber.new {PriceManager.new.load_prices}.resume
         AMQP.start do |connection|
           @logger.debug "AMQP started #{Time.now}"
           channel = AMQP::Channel.new connection
           queue = channel.queue(@config["broker"]["queue_name"], :auto_delete => true)
-          #exchange = channel.direct("default")
+          #exchange = channel.direct("amqp.default.exchange")
           #queue.bind(exchange)
           queue.subscribe do |payload|
             @logger.debug "Received message #{payload}"
@@ -52,12 +68,17 @@ module Mapper
             EM.defer {stop_search_server} if payload == 'stop_solr'
             EM.defer {add_db_to_search_index} if payload == 'index'
             EM.defer {setup_storage} if payload == 'setup_storage'
+            proc{ queue.unsubscribe; queue.delete;connection.close{EM.stop} }.call == 'test'
           end
         end
       end
     end
     def start_webserver
+      stop_webserver
       WebServer.run!
+    end
+    def stop_webserver
+      system "fuser -k 4567/tcp"
     end
     def setup_storage
       StorageBase.setup
@@ -72,54 +93,32 @@ module Mapper
       @storage_comparison = StorageComparison.new "storage"
     end
     def stop_search_server
-      FileUtils.cd(@working_dir) do
-        if File.exist?("solr_pid")
-          begin
-            pid = IO.readlines("solr_pid")[0].to_i
-            Process.kill(0, pid)
-          rescue => e 
-            STDERR.puts("Removing PID file at #{@working_dir}")
-            FileUtils.rm "solr_pid"
-            p e
-          end
-        end
-      end
+      system "fuser -k 8983/tcp"
     end
     def start_search_server
       begin
-        #exec "fuser", "-k", "8983/tcp"
         stop_search_server
-        pid = fork do
-          Process.setsid
-          STDIN.reopen('/dev/null')
-          STDOUT.reopen('/dev/null')
-          STDERR.reopen(STDOUT)
-          FileUtils.cd '../solr/example' do
-            command = ["java"]
-            command << "-Dsolr.solr.home=./example-DIH/solr/"
-            command << "-jar"
-            command << "start.jar"
-            exec(*command)
-          end
+        FileUtils.cd '../solr/example' do
+          command = ["java"]
+          command << "-Dsolr.solr.home=./example-DIH/solr/"
+          command << "-jar"
+          command << "start.jar"
+          pid = spawn(*command,:in=>'/dev/null', :out => '/dev/null', :err => '/dev/null')
+          p "Solr is running on #{pid}"
         end
-        FileUtils.cd(@working_dir) do
-          File.open("solr_pid", "w") {|file| file << pid}
-        end
-        p "Solr is running on #{pid}"
       rescue => e
         p e
       end
     end
     # співставлення
     def match
-       
-      EM::Synchrony::FiberIterator.new(@storage_item.all, @config["concurrency"]["iterator_size"]).each do |product, iter|
+      EM::Synchrony::FiberIterator.new(@storage_item.all, @config["concurrency"]["iterator_size"]).each do |product|
         begin
           (product["code"].empty?) ? storage_item_model =  product["article"] : storage_item_model =  product["code"]
           response = @search_worker.find({
               :title => product["title"],
-              :model => storage_item_model}
-          )
+              :model => storage_item_model    
+          })
           if response[:count] > 0
             shop_item = response.docs[0] # <= беремо тільки перший знайдений товар
             shop_product_id = shop_item["id"].to_i
@@ -173,7 +172,7 @@ end
 require_relative 'PriceManager'
 require_relative 'PriceReader'
 
-mapper = Mapper::Base.new
-mapper.run
+#mapper = Mapper::Base.new
+#mapper.run
 
 

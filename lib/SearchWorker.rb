@@ -1,20 +1,25 @@
 require 'rsolr-ext'
 
 class SearchWorker
-  # <= TODO: include EM::Deferrable
   def initialize(config, dictionary)
-    p "Config for search: " + config["host"]
-    @solr = RSolr::Ext.connect :url => config["host"]
+    @host = config["host"]
+    @solr = RSolr::Ext.connect :url => @host
     @distance = 0
     @dictionary = dictionary
   end
   #кіл-ть документів в колекції
-  def get_total_docs
-    total = @solr.get 'select', :params => {:q => "*:*", :wt => :ruby}
-    count = total["response"]["numFound"]
+  def get_total_docs(flag = false)
+    begin
+      response = @solr.find :q=>'*:*'
+    rescue => e
+      p e
+      return false
+    end
+    count = response["response"]["numFound"].to_i
     raise TypeError "Wrong response" if count.nil?
-    p "Total docs found: #{count.to_i}"
+    p "Total docs found: #{count}"
     count
+    (flag) ? response.ok? : count
   end
   #TODO: включити правильно delta-import
   def get_import_type
@@ -23,9 +28,23 @@ class SearchWorker
   end
   #індексування бази
   def index
-    response = @solr.get 'dataimport', :params => {:command => get_import_type}
-    p response
-    self
+    @solr.get 'dataimport', :params => {:command => get_import_type}
+  end
+  def check_index
+    @solr.get 'dataimport'
+  end
+  def remove_index
+    begin
+      host = 'localhost'
+      port = '8983'
+      delete_path = '/solr/mapper_development/update?stream.body=<delete><query>*:*</query></delete>'
+      commit_path = '/solr/mapper_development/update?stream.body=<commit/>'
+      delete_code = Net::HTTP.get_response(host, delete_path, port).code.to_i
+      commit_code = Net::HTTP.get_response(host, commit_path, port).code.to_i
+      (delete_code == 200 && commit_code == 200) ? true : false
+    rescue => e
+      p e
+    end
   end
   # екранування спец.символів які використовує Solr
   #TODO: + AND OR && ||
@@ -57,8 +76,11 @@ class SearchWorker
     p result
     result.join(" ")
   end
+  def server_running?
+    get_total_docs(true)
+  end
   def cut_float str
-     (str.index ".") ? str.split(".")[0] : str
+    (str.index ".") ? str.split(".")[0] : str
   end
   def find(fields)
     raise ArgumentError "No query given" if fields.nil?
