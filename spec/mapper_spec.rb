@@ -19,15 +19,15 @@ describe Mapper::Base do
       }
     }
   end
-    #it 'matches products and stores in db' do
-    #  expect(@solr.server_running?).to be_true
-    #  Comparison.delete_all
-    #  expect(Comparison.count).to eq 0
-    #  Fiber.new{@pm.match}.resume
-    #  EM.add_timer(280){
-    #    expect(Comparison.count).to eq 9400
-    #    done
-    #  }
-    #end
+    it 'matches products and stores in db' do
+      expect(@solr.server_running?).to be_true
+      Comparison.delete_all
+      expect(Comparison.count).to eq 0
+      Fiber.new{@mapper.match}.resume
+      EM.add_timer(340){
+        expect(Comparison.count).to eq 9400
+        done
+      }
+    end
 end
 

@@ -34,6 +34,7 @@ module Mapper
       set_logger
       @search_worker = SearchWorker.new @config["search"], @dictionary["search"] # <= пошук
       Thread.abort_on_exception=true
+      @output ||= STDOUT
     end
     def set_output output
       @output = output
@@ -43,23 +44,18 @@ module Mapper
       (File.exists?(filename)) ? filename : File.join(@working_dir,filename)
     end
     def run
-      @output ||= STDOUTcd
-      #begin
       @output.print "Run, Forest, run!"
-      #rescue
-      #  @output = STDOUT
-      #  retry
-      #end
+      
       EM.synchrony do
-        @logger.debug "Mapper has been started #{Time.now}"
+        print "Mapper has been started #{Time.now}"
         AMQP.start do |connection|
-          @logger.debug "AMQP started #{Time.now}"
+          print "AMQP started #{Time.now}"
           channel = AMQP::Channel.new connection
           queue = channel.queue(@config["broker"]["queue_name"], :auto_delete => true)
           #exchange = channel.direct("amqp.default.exchange")
           #queue.bind(exchange)
           queue.subscribe do |payload|
-            @logger.debug "Received message #{payload}"
+            print "Received message #{payload}"
             connection.close {EM.stop} if payload == "stop"
             Fiber.new{PriceManager.new.load_prices}.resume if payload == "start"
             Fiber.new {match}.resume if payload == 'match'
@@ -68,7 +64,6 @@ module Mapper
             EM.defer {stop_search_server} if payload == 'stop_solr'
             EM.defer {add_db_to_search_index} if payload == 'index'
             EM.defer {setup_storage} if payload == 'setup_storage'
-            proc{ queue.unsubscribe; queue.delete;connection.close{EM.stop} }.call == 'test'
           end
         end
       end
@@ -103,7 +98,7 @@ module Mapper
           command << "-Dsolr.solr.home=./example-DIH/solr/"
           command << "-jar"
           command << "start.jar"
-          pid = spawn(*command,:in=>'/dev/null',:err => :out)# :out => '/dev/null', :err => '/dev/null')
+          pid = spawn(*command,:in=>'/dev/null',:err => :out)
           p "Solr is running on #{pid}"
         end
       rescue => e
@@ -112,25 +107,39 @@ module Mapper
     end
     # співставлення
     def match
-      EM::Synchrony::FiberIterator.new(@storage_item.all, @config["concurrency"]["iterator_size"]).each do |product|
-        begin
-          (product["code"].empty?) ? storage_item_model =  product["article"] : storage_item_model =  product["code"]
-          response = @search_worker.find({
-              :title => product["title"],
-              :model => storage_item_model    
-          })
-          if response[:count] > 0
-            shop_item = response.docs[0] # <= беремо тільки перший знайдений товар
-            shop_product_id = shop_item["id"].to_i
-            price_product_id = product["id"]
-            p shop_item
-            linked = check_models(shop_item["model"], storage_item_model) || check_titles(shop_item["title"], product["title"])
-            p "Linked: #{linked}"
-            @storage_comparison.link(price_product_id, shop_product_id, linked).errback {|error|p error}
-          end
-        rescue => e
-          p e
+      EM::Synchrony::FiberIterator.new(@storage_item.all, @config["concurrency"]["iterator_size"]).each do |product, iter|
+        
+        link(product)
+        #if response[:count] > 0
+        #  shop_item = response.docs[0] # <= беремо тільки перший знайдений товар
+        #  shop_product_id = shop_item["id"].to_i
+        #  price_product_id = product["id"]
+        #  p shop_item
+        #  linked = check_models(shop_item["model"], storage_item_model) || check_titles(shop_item["title"], product["title"])
+        #  p "Linked: #{linked}"
+        # @storage_comparison.link(price_product_id, shop_product_id, linked).errback {|error|p error}
+        #end
+        
+      end
+    end
+    def link(product)
+      begin
+        (product["code"].empty?) ? storage_item_model =  product["article"] : storage_item_model =  product["code"]
+        response = @search_worker.find({:title => product["title"],:model => storage_item_model})
+      
+        if response[:count] > 0
+          shop_item = response.docs[0] # <= беремо тільки перший знайдений товар
+          shop_product_id = shop_item["id"].to_i
+          price_product_id = product["id"]
+          p shop_item
+          linked = check_models(shop_item["model"], storage_item_model) || check_titles(shop_item["title"], product["title"])
+          p "Linked: #{linked}"
+          @storage_comparison.link(price_product_id, shop_product_id, linked).errback {|error|p error}
+        else
+          p "Product: #{product["title"]} has no results :((" 
         end
+      rescue => e
+        p e
       end
     end
     #TODO: вдосконалити

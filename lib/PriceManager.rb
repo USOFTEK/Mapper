@@ -18,6 +18,7 @@ class PriceManager < Mapper::Base
     @logger.debug message
     @output.print message
   end
+  #TODO: перевіряти розмір або хеш файлу, якщо змінився проводити парсинг ще раз
   def check_price filename
     unless @price.check filename
       parse filename
@@ -36,7 +37,7 @@ class PriceManager < Mapper::Base
                 result = Fiber.new {@storage_item.add(data, filename)}.resume
                 result.callback do
                   @counter += 1;
-                  p "#{filename} #{@counter} / #{@price_count}successfully added"
+                  print "#{filename} #{@counter} / #{@price_count}successfully added"
                   print "Operation index has been successfully finished" if @counter == @price_count
                 end
                 result.errback{|error| p error}
@@ -56,30 +57,6 @@ class PriceManager < Mapper::Base
     @counter = 0
     EM::Synchrony::FiberIterator.new(filenames, @config["concurrency"]["iterator_size"]).map do |filename|
       check_price filename
-      #TODO: перевіряти розмір або хеш файлу, якщо змінився проводити парсинг ще раз
-      #unless @price.check(filename) # <= # перевірка імені прайсу
-      #  p "Filename now is procesed: #{filename}"
-      #  operation = proc {PriceReader.new(filename, @dictionary["headers"]).parse }
-      #  callback = proc do |data|
-      #    EM.defer(
-      #      proc do
-      #        @price.add(filename).callback do
-      #          result = Fiber.new {@storage_item.add(data, filename)}.resume
-      #          result.callback do
-      #            @counter += 1;
-      #            p "#{filename} #{@counter} / #{@price_count}successfully added"
-      #            print "Operation index has been successfully finished" if @counter == @price_count
-      #          end
-      #          result.errback{|error| p error}
-      #        end
-      #      end
-      #    )
-      #  end
-      #  EM.defer(operation, callback)
-      #else
-      #  @price_count -= 1
-      #  @output.print "Price #{filename} already exists in database!"
-      #end
     end
   end
 end
