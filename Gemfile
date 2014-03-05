@@ -14,4 +14,5 @@ source 'https://rubygems.org'
   gem "evented-spec"
   gem "rack"
   gem "rspec"
+  gem "codeclimate-test-reporter"
 
