@@ -14,7 +14,7 @@ end
 desc 'Test'
 task :spec do
   spec = RSpec::Core::RakeTask.new do |t|
-    t.pattern = FileList['../spec/amqp_spec.rb']
+    t.pattern = FileList['../spec/*_spec.rb']
   end
 end
 
