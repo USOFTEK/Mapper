@@ -11,4 +11,7 @@ source 'https://rubygems.org'
   gem "sinatra"
   gem "async_sinatra"
   gem "simple-spreadsheet"
+  gem "evented-spec"
+  gem "rack"
+  gem "rspec"
 
