@@ -6,11 +6,12 @@ Mapper
     <img src="https://codeclimate.com/repos/5313ca5ce30ba0768e0000eb/badges/ced2362d8e47d6a3c8e7/gpa.png" />
 </a>
 <h2>Usage</h2>
-rake spec # <= starts RSpec tests
-rake start_solr # <= starts Solr
-rake stop_solr # <= stops Solr
-rake run # <= runs Mapper
-
+<ul>
+<li><b>rake spec</b> # &lt;= starts RSpec tests</li>
+<li><b>rake start_solr</b> # &lt;= starts Solr</li>
+<li><b>rake stop_solr</b> # &lt;= stops Solr</li>
+<li><b>rake run</b> # &lt;= runs Mapper</li>
+</ul>
 <h2>Configs</h2>
 <h3>TeamCity</h3>
 <ul>
