@@ -108,18 +108,7 @@ module Mapper
     # співставлення
     def match
       EM::Synchrony::FiberIterator.new(@storage_item.all, @config["concurrency"]["iterator_size"]).each do |product, iter|
-        
         link(product)
-        #if response[:count] > 0
-        #  shop_item = response.docs[0] # <= беремо тільки перший знайдений товар
-        #  shop_product_id = shop_item["id"].to_i
-        #  price_product_id = product["id"]
-        #  p shop_item
-        #  linked = check_models(shop_item["model"], storage_item_model) || check_titles(shop_item["title"], product["title"])
-        #  p "Linked: #{linked}"
-        # @storage_comparison.link(price_product_id, shop_product_id, linked).errback {|error|p error}
-        #end
-        
       end
     end
     def link(product)

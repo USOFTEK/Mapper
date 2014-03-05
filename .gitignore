@@ -1,7 +1,7 @@
 *.yaml
 log
 solr/example/logs
-solr/example/example-DIH/solr/mapper_development/data/index/
+solr/example/example-DIH/solr/mapper_development/
 *.gem
 *.rbc
 .bundle
