@@ -1,0 +1,6 @@
+headers:
+    code: [код, code, model, модель]
+    title: [назва,товар,name, наименование, title, product, продукт, номенклатура]
+    article: [артикул, article]
+search: [для, в, арт., з, у, c, до, for, in, the]
+    

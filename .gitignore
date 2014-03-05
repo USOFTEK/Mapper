@@ -1,5 +1,5 @@
-*.yaml
-log
+#*.yaml
+#log
 solr/example/logs
 solr/example/example-DIH/solr/mapper_development/
 *.gem
