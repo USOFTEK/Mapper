@@ -6,6 +6,7 @@ require 'fiber'
 require 'yaml'
 require 'logging'
 require 'net/http'
+require 'digest'
 
 require_relative 'SearchWorker'
 require_relative '../app/models/Product'
@@ -19,7 +20,7 @@ require_relative 'WebServer'
 module Mapper
   class Base
     attr_accessor :working_dir
-    attr_reader :storage_comparison, :storage_item
+    attr_reader :storage_comparison, :storage_item, :search_worker
     def initialize
       @options = {:dir=>"../prices", :env => 'development'}
       config, dictionary = "../config/config.yaml", "../config/dictionary.yaml"

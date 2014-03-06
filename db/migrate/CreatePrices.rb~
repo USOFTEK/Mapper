@@ -10,7 +10,6 @@ class CreatePrices < ActiveRecord::Migration
 			t.column :hash, :string, :null => false, :unique => true
 			t.timestamps
 		end
-		add_index :prices, :hash, :unique => true
 	end
   def self.down
     begin

@@ -6,34 +6,40 @@ class PriceManager < Mapper::Base
   def initialize
     super
   end
-  #зчитує файли з потрібною директорії
   def get_price_names *dir
     (dir.empty?) ? @prices_dir = @options[:dir] : @prices_dir = dir[0]
     
     FileUtils.cd @prices_dir 
     extensions = @config["extensions"].join(",")
     @filenames = Dir.glob("*.{#{extensions}}")
+    raise "Error", "No prices :(" if @filenames.count == 0
+    @filenames
   end
   def print message
     @logger.debug message
     @output.print message
   end
+  def get_hash(filename)
+    Digest::SHA256.file(filename).hexdigest
+  end
   #TODO: перевіряти розмір або хеш файлу, якщо змінився проводити парсинг ще раз
   def check_price filename
-    unless @price.check filename
-      parse filename
+    # отримуємо хеш файлу, щоб в подальшому порівняти з тим що міститься у базі
+    hash = get_hash(filename)
+    unless @price.check(filename, hash)
+      parse(filename, hash)
     else
       @price_count -= 1
-      @output.print "Price #{filename} already exists in database!"
+      print "Price #{filename} already exists in database!"
     end
   end
-  def parse filename
+  def parse(filename, hash)
     EM.defer(
       proc {PriceReader.new(filename, @dictionary["headers"]).parse },
       proc do |data|
           EM.defer(
             proc do
-              @price.add(filename).callback do
+              @price.add(filename, hash).callback do
                 result = Fiber.new {@storage_item.add(data, filename)}.resume
                 result.callback do
                   @counter += 1;
@@ -49,7 +55,6 @@ class PriceManager < Mapper::Base
   end
   # приймає масив прайсів
   def load_prices(*params)
-    
     get_price_names
     (params.empty?) ? filenames = @filenames : filenames = params[0]
     raise ArgumentError, 'must be array of files #{filenames.kind_of?}' unless filenames.kind_of?(Array) 
