@@ -37,6 +37,10 @@ module Mapper
       Thread.abort_on_exception=true
       @output ||= STDOUT
     end
+    def print message
+      @logger.debug message
+      @output.print message
+    end
     def set_output output
       @output = output
     end
@@ -93,6 +97,7 @@ module Mapper
     end
     def start_search_server
       begin
+        return false if @search_worker.server_running?
         stop_search_server
         FileUtils.cd '../solr/example' do
           command = ["java"]
@@ -101,6 +106,7 @@ module Mapper
           command << "start.jar"
           pid = spawn(*command,:in=>'/dev/null',:err => :out)
           p "Solr is running on #{pid}"
+          return true
         end
       rescue => e
         p e

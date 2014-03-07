@@ -69,8 +69,8 @@ class SearchWorker
     # 1. Визначити масив слів для віднімання
     # 2. Добавити знак мінус для слів у строці
     result = query.split(" ").map! do |word|
-      word = word.downcase # TODO: downcase для українських та рос. слів
-      matched = @dictionary.join(",").match(/#{word}/)
+      #word = word.downcase # TODO: downcase для українських та рос. слів
+      matched = @dictionary.join(",").match(/#{word}/i)
       (matched) ?  word = "-#{word}" : word
     end
     p result
@@ -82,16 +82,16 @@ class SearchWorker
   def cut_float str
     (str.index ".") ? str.split(".")[0] : str
   end
-  def find(fields)
+  def find(fields, rows = 1)
     raise ArgumentError "No query given" if fields.nil?
     raise ArgumentError "Title is empty!" if fields[:title].empty?
     options = Hash.new
-    options[:title] = boost(escape(fields[:title]))
+    options[:title] = boost minus(escape(fields[:title]))
     options[:model] = boost(escape(cut_float fields[:model]), 1000) unless fields[:model].nil? || fields[:model].empty?
     
     solr_params = {
       :queries => options,
-      :rows => 5,
+      :rows => rows,
       :wt => :ruby
     }
     response = @solr.find solr_params

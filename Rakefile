@@ -20,6 +20,7 @@ end
 
 task :hello do
   p "Hello Rake!"
+  puts "Current env is #{ENV['RAKE_ENV']}"
 end
 
 desc 'Test'
@@ -34,7 +35,7 @@ end
 
 desc 'Starts Solr'
 task :start_solr do
-  if @mapper.search_worker.is_running?
+  if @mapper.search_worker.server_running?
     @mapper.print "Solr is running"
   else
     @mapper.start_search_server
@@ -46,4 +47,12 @@ task :stop_solr do
 	@mapper.stop_search_server if @mapper
 end
 
-task :default => :spec
+desc 'starts webserver'
+task :start_webserver do
+  @mapper.start_webserver
+end
+task :stop_webserver do
+  @mapper.stop_webserver
+end
+
+task :default => :hello

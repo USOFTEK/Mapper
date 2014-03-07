@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 
 describe "PriceManager" do
   include EventedSpec::SpecHelper
-  include EventedSpec::AMQPSpec
+  include EventedSpec::EMSpec
   
   default_timeout 60
   before :all do
@@ -16,19 +16,19 @@ describe "PriceManager" do
   end
     
   it 'parses prices and checks data' do
-    #expect(@filenames.count).to be > 0
-    #@filenames.each do |filename| 
-    #  price_reader = PriceReader.new(filename, @dictionary)
-    #  expect(price_reader).to receive(:parse).and_call_original
-    # data = price_reader.parse
-    #  expect(data).to be_a_kind_of Hash
-    #  expect(data[:results]).to be_a_kind_of Array
-    #  expect(data[:results].count).to be >= 100
-    # expect(data[:headers]).to be_a_kind_of Hash
-    #  expect(data[:headers]["title"]).to be_a_kind_of Hash
-    #  expect(data[:line]).to be_a_kind_of Integer
-    # p "Filename: #{filename} has count: #{data[:results].count}"
-    #end
+    expect(@filenames.count).to be > 0
+    @filenames.each do |filename| 
+      price_reader = PriceReader.new(filename, @dictionary)
+      expect(price_reader).to receive(:parse).and_call_original
+      data = price_reader.parse
+      expect(data).to be_a_kind_of Hash
+      expect(data[:results]).to be_a_kind_of Array
+      expect(data[:results].count).to be >= 100
+      expect(data[:headers]).to be_a_kind_of Hash
+      expect(data[:headers]["title"]).to be_a_kind_of Hash
+      expect(data[:line]).to be_a_kind_of Integer
+      p "Filename: #{filename} has count: #{data[:results].count}"
+    end
     delayed(1){done}
   end
   it 'checks hashes' do

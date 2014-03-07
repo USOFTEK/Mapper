@@ -17,5 +17,5 @@ RSpec.configure do |config|
     @pm = PriceManager.new
     @solr = @pm.search_worker
   end
-  config.order = 'random'
+  config.order = 'defined'
 end

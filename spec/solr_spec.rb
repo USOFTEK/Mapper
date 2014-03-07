@@ -2,11 +2,11 @@ require_relative 'spec_helper'
 
 describe 'Solr' do
   include EventedSpec::SpecHelper
-  include EventedSpec::AMQPSpec
+  include EventedSpec::EMSpec
   
-  default_timeout 120
+  default_timeout 500
   before :all do
-    done
+    @start_delay = 2
   end
   it 'checks java' do
     stdin, stdout,stderr = Open3.popen3("java -version")
@@ -14,25 +14,28 @@ describe 'Solr' do
     done
   end
   it 'runs search server and stops it' do
-    expect(Dir.exists? '../solr/example/example-DIH/solr/').to be_true
-       
-    @mapper.start_search_server
-    EM.add_timer(17){
-      p "IS RUNNING? " + @solr.server_running?.to_s
-      expect(@solr.server_running?).to be_true
-      expect(@solr.get_total_docs).to be_a_kind_of Integer
-      expect(@solr.get_total_docs).to be > 0
-      done
-      #@mapper.stop_search_server
-      #EM.add_timer(1){
-      #p "IS RUNNING? " + @solr.server_running?.to_s
-      # expect(@solr.server_running?).to be_false
-      # done
-      #}
+    (@mapper.start_search_server) ? @start_delay = 15 : @start_delay = 0.5
+    p @start_delay
+    EM.add_timer(@start_delay){
+      expect(Dir.exists? '../solr/example/example-DIH/solr/').to be_true
+      EM.add_timer(0.2){
+        p "IS RUNNING? " + @solr.server_running?.to_s
+        expect(@solr.server_running?).to be_true
+        expect(@solr.get_total_docs).to be_a_kind_of Integer
+        expect(@solr.get_total_docs).to be > 0
+        done
+        #@mapper.stop_search_server
+        #EM.add_timer(1){
+        #p "IS RUNNING? " + @solr.server_running?.to_s
+        # expect(@solr.server_running?).to be_false
+        # done
+        #}
+      }
     }
   end
   it 'removes index' do
-    EM.add_timer(30) do
+    p @start_delay
+    EM.add_timer(@start_delay + 3) do
       expect(@solr.server_running?).to be_true
       expect(@solr.remove_index).to be_true
       expect(@solr.get_total_docs).to eq 0
@@ -40,8 +43,7 @@ describe 'Solr' do
     end
   end
   it 'fullimport' do
-    
-    EM.add_timer(35) do
+    EM.add_timer(@start_delay + 6) do
       expect(@solr.server_running?).to be_true
       expect(@solr.remove_index).to be_true
       expect(@solr.get_total_docs).to eq 0
@@ -61,4 +63,16 @@ describe 'Solr' do
       }
     end
   end
+  it 'matches products and stores in db' do
+      expect(@solr.server_running?).to be_true
+      expect(Product.count).to eq 9854
+      expect(Price.count).to eq 5
+      Comparison.delete_all
+      expect(Comparison.count).to eq 0
+      Fiber.new{@mapper.match}.resume
+      EM.add_timer(360){
+        expect(Comparison.count).to be >= 9000
+        done
+      }
+    end
 end

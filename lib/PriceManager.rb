@@ -22,7 +22,6 @@ class PriceManager < Mapper::Base
   def get_hash(filename)
     Digest::SHA256.file(filename).hexdigest
   end
-  #TODO: перевіряти розмір або хеш файлу, якщо змінився проводити парсинг ще раз
   def check_price filename
     # отримуємо хеш файлу, щоб в подальшому порівняти з тим що міститься у базі
     hash = get_hash(filename)
