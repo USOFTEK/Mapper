@@ -8,6 +8,8 @@ source 'https://rubygems.org'
   gem 'logging'
   gem "rsolr"
   gem "rsolr-ext"
+  gem "rsolr-async" 
+  gem "em-http-request"
   gem "sinatra"
   gem "async_sinatra"
   gem "simple-spreadsheet"
