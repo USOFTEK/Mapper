@@ -4,7 +4,7 @@ describe 'Solr' do
   include EventedSpec::SpecHelper
   include EventedSpec::EMSpec
   
-  default_timeout 500
+  default_timeout 600
   before :all do
     @start_delay = 2
   end
@@ -14,11 +14,11 @@ describe 'Solr' do
     done
   end
   it 'runs search server and stops it' do
-    (@mapper.start_search_server) ? @start_delay = 15 : @start_delay = 0.5
+    (@mapper.start_search_server) ? @start_delay = 20 : @start_delay = 0.5
     p @start_delay
     EM.add_timer(@start_delay){
       expect(Dir.exists? '../solr/example/example-DIH/solr/').to be_true
-      EM.add_timer(0.2){
+      EM.add_timer(1){
         p "IS RUNNING? " + @solr.server_running?.to_s
         expect(@solr.server_running?).to be_true
         expect(@solr.get_total_docs).to be_a_kind_of Integer
@@ -70,7 +70,7 @@ describe 'Solr' do
       Comparison.delete_all
       expect(Comparison.count).to eq 0
       Fiber.new{@mapper.match}.resume
-      EM.add_timer(360){
+      EM.add_timer(500){
         expect(Comparison.count).to be >= 9000
         done
       }

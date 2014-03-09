@@ -23,6 +23,11 @@ task :hello do
   puts "Current env is #{ENV['RAKE_ENV']}"
 end
 
+task :ordered_tests do 
+  RSpec::Core::RakeTask.new do |q|
+    q.spec_files = FileList['solr_spec.rb', 'webserver_spec.rb', 'mapper_spec.rb', 'price_manager_spec.rb', 'amqp_spec.rb']
+  end
+end
 desc 'Test'
 task :spec, :arg do |t, args|
   (args[:arg].nil?) ? con = "*" : con = args[:arg]
@@ -55,4 +60,4 @@ task :stop_webserver do
   @mapper.stop_webserver
 end
 
-task :default => :hello
+task :default => :spec
