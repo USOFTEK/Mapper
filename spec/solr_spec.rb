@@ -53,12 +53,12 @@ describe 'Solr' do
         status = @solr.check_index["status"]
         p status
         if status == "idle"
-          p "Ola! I've finished"
+          p "Ola! I've finished Full Import"
           p "status: #{status}"
           expect(@solr.get_total_docs).to eq 69504
           done
         else
-          p "Don't bother me.. I'm still #{status}"
+          p "Full import in progress...I'm #{status}"
         end
       }
     end
