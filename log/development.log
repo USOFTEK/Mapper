@@ -1106,3 +1106,4 @@ DEBUG  PriceManager : Price opt.xlsx already exists in database!
 DEBUG  PriceManager : Price kt.xlsx already exists in database!
 DEBUG  PriceManager : Price Pr1.xlsx already exists in database!
 DEBUG  PriceManager : Price ktc.xlsx already exists in database!
+DEBUG  Mapper::Base : Mapper has been started 2014-03-10 14:55:25 +0200

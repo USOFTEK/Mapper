@@ -10,7 +10,7 @@ class NonBlockingDB
   end
   def set_db(db)
     config = "../../../config/config.yaml"
-    raise Error, "Mapper env is not defined!" if ENV['MAPPER_ENV'].nil?
+    raise "Error", "Mapper env is not defined!" if ENV['MAPPER_ENV'].nil?
     @config = YAML.load_file(check_filename config)[ENV['MAPPER_ENV']]
     @db = EventMachine::Synchrony::ConnectionPool.new(:size => @config["concurrency"]["pool_size"]) do
       Mysql2::EM::Client.new(@config["db"][db])
