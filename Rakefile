@@ -9,10 +9,6 @@ task :run do
   @mapper.run
 end
 
-task :my_task, :arg1, :arg2 do |t, args|
-  puts "Args were: #{args}"
-end
-
 desc 'Setup storage'
 task :setup_storage do
   @mapper.setup_storage
@@ -20,7 +16,7 @@ end
 
 task :hello do
   p "Hello Rake!"
-  puts "Current env is #{ENV['RAKE_ENV']}"
+  puts "Current env is #{ENV['MAPPER_ENV']}"
 end
 
 desc 'Test'

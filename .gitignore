@@ -1,5 +1,3 @@
-*.yaml
-config
 log
 solr/example/logs
 solr/example/example-DIH/solr/mapper_development/

@@ -1092,3 +1092,17 @@ DEBUG  Mapper::Base : Mapper has been started 2014-03-09 13:39:53 +0200
 DEBUG  Mapper::Base : Mapper has been started 2014-03-09 13:39:53 +0200
 DEBUG  Mapper::Base : Mapper has been started 2014-03-09 13:39:53 +0200
 DEBUG  Mapper::Base : Mapper has been started 2014-03-09 13:39:53 +0200
+DEBUG  PriceManager : ktc.xlsx 1 / 5successfully added
+DEBUG  PriceManager : price_minimal.xlsx 2 / 5successfully added
+DEBUG  Mapper::Base : Mapper has been started 2014-03-10 14:10:53 +0200
+DEBUG  PriceManager : price_minimal.xlsx 1 / 5successfully added
+DEBUG  PriceManager : ktc.xlsx 2 / 5successfully added
+DEBUG  PriceManager : kt.xlsx 3 / 5successfully added
+DEBUG  PriceManager : Pr1.xlsx 4 / 5successfully added
+DEBUG  PriceManager : opt.xlsx 5 / 5successfully added
+DEBUG  PriceManager : Operation index has been successfully finished
+DEBUG  PriceManager : Price price_minimal.xlsx already exists in database!
+DEBUG  PriceManager : Price opt.xlsx already exists in database!
+DEBUG  PriceManager : Price kt.xlsx already exists in database!
+DEBUG  PriceManager : Price Pr1.xlsx already exists in database!
+DEBUG  PriceManager : Price ktc.xlsx already exists in database!
