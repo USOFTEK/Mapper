@@ -22,7 +22,7 @@ module Mapper
     attr_accessor :working_dir
     attr_reader :storage_comparison, :storage_item, :search_worker
     def initialize
-      raise "Error", "Mapper env is not defined!" if ENV['MAPPER_ENV'].nil?
+      raise StandardError, "Mapper env is not defined!" if ENV['MAPPER_ENV'].nil?
       @options = {:dir=>"../prices", :env => ENV['MAPPER_ENV']}
       config, dictionary = "../config/config.yaml", "../config/dictionary.yaml"
       begin

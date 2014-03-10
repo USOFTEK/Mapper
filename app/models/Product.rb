@@ -4,7 +4,7 @@ require "em-synchrony/activerecord"
 
 class ActiveRecord::Base
   def self.environment
-    raise "Error", "Mapper env is not defined!" if ENV['MAPPER_ENV'].nil?
+    raise StandardError, "Mapper env is not defined!" if ENV['MAPPER_ENV'].nil?
     ENV['MAPPER_ENV']
   end
   def self.check_filename filename
