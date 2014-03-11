@@ -14,7 +14,11 @@ describe 'Solr' do
     done
   end
   it 'runs search server and stops it' do
-    (@mapper.start_search_server) ? @start_delay = 20 : @start_delay = 0.5
+    @start_delay = 0.5
+   unless @solr.server_running?
+     @start_delay = 20 
+     @mapper.start_search_server
+   end
     p @start_delay
     EM.add_timer(@start_delay){
       expect(Dir.exists? '../solr/example/example-DIH/solr/').to be_true
@@ -24,12 +28,6 @@ describe 'Solr' do
         expect(@solr.get_total_docs).to be_a_kind_of Integer
         expect(@solr.get_total_docs).to be > 0
         done
-        #@mapper.stop_search_server
-        #EM.add_timer(1){
-        #p "IS RUNNING? " + @solr.server_running?.to_s
-        # expect(@solr.server_running?).to be_false
-        # done
-        #}
       }
     }
   end

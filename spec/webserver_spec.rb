@@ -9,7 +9,7 @@ describe 'WebServer' do
   let(:port){4567}
   
   it 'runs webserver and checks main routes' do
-    EM.defer{@pm.start_webserver}
+    EM.defer{@mapper.start_webserver}
     EM.add_timer(1){
       ['/', '/link'].each do |path|
         req = EventMachine::HttpRequest.new("#{host}:#{port}#{path}").get

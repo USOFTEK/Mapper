@@ -5,50 +5,41 @@ require 'amqp'
 require 'fiber'
 require 'yaml'
 require 'logging'
-require 'net/http'
 require 'digest'
 
 require_relative 'SearchWorker'
-require_relative '../app/models/Product'
-require_relative '../app/models/async/NonBlockingDB'
-require_relative '../app/models/async/StorageItem'
-require_relative '../app/models/async/StoragePrice'
-require_relative '../app/models/async/StorageComparison'
-require_relative '../app/models/async/ShopItem'
+require_relative File.expand_path(File.join(File.dirname(__FILE__), '../app/models/Product'))
+require_relative File.expand_path(File.join(File.dirname(__FILE__),'../app/models/async/NonBlockingDB'))
+require_relative File.expand_path(File.join(File.dirname(__FILE__),'../app/models/async/StorageItem'))
+require_relative File.expand_path(File.join(File.dirname(__FILE__),'../app/models/async/StoragePrice'))
+require_relative File.expand_path(File.join(File.dirname(__FILE__),'../app/models/async/StorageComparison'))
+require_relative File.expand_path(File.join(File.dirname(__FILE__),'../app/models/async/ShopItem'))
 require_relative 'WebServer'
 
 module Mapper
   class Base
-    attr_accessor :working_dir
-    attr_reader :storage_comparison, :storage_item, :search_worker
+    attr_reader :search_worker
     def initialize
       raise StandardError, "Mapper env is not defined!" if ENV['MAPPER_ENV'].nil?
       @options = {:dir=>"../prices", :env => ENV['MAPPER_ENV']}
-      config, dictionary = "../config/config.yaml", "../config/dictionary.yaml"
+      @working_dir = File.dirname(__FILE__)
+      p "working dir #{@working_dir}"
+      config_dir = File.expand_path(File.join(File.dirname(__FILE__), '../config'))
+      config, dictionary = "#{config_dir}/config.yaml", "#{config_dir}/dictionary.yaml"
       begin
-        @config = YAML.load_file(check_filename config)[@options[:env]]
-        @dictionary = YAML.load_file(check_filename dictionary)
+        @config = YAML.load_file(config)[@options[:env]]
+        @dictionary = YAML.load_file(dictionary)
       rescue Errno::ENOENT => e
         p e.message
       end
-      @working_dir = File.dirname(__FILE__)
-      register_async_models
-      set_logger
-      @search_worker = SearchWorker.new @config["search"], @dictionary["search"] # <= пошук
       Thread.abort_on_exception=true
       @output ||= STDOUT
+      set_logger
+      define_workers
     end
-    def print message
-      @logger.debug message
-      @output.print message
-    end
-    def set_output output
-      @output = output
-    end
-    def check_filename filename
-      raise ArgumentError 'filename is not defined' if filename.nil?
-      (File.exists?(filename)) ? filename : File.join(@working_dir,filename)
-    end
+    
+    public
+    
     def run
       @output.print "Run, Forest, run!"
       
@@ -63,7 +54,7 @@ module Mapper
           queue.subscribe do |payload|
             print "Received message #{payload}"
             connection.close {EM.stop} if payload == "stop"
-            Fiber.new{PriceManager.new.load_prices}.resume if payload == "start"
+            Fiber.new{start}.resume if payload == "start"
             Fiber.new {match}.resume if payload == 'match'
             EM.defer {start_webserver} if payload == 'start_webserver'
             EM.defer {start_search_server} if payload == 'start_solr'
@@ -73,6 +64,9 @@ module Mapper
           end
         end
       end
+    end
+    def start
+      Fiber.new{PriceManager.new.load_prices}.resume
     end
     def start_webserver
       stop_webserver
@@ -86,12 +80,6 @@ module Mapper
     end
     def add_db_to_search_index
       @search_worker.index
-    end
-    def register_async_models
-      @price = StoragePrice.new "storage"
-      @shop_item = ShopItem.new "shop"
-      @storage_item = StorageItem.new "storage"
-      @storage_comparison = StorageComparison.new "storage"
     end
     def stop_search_server
       system "fuser -k 8983/tcp"
@@ -118,6 +106,32 @@ module Mapper
       EM::Synchrony::FiberIterator.new(@storage_item.all, @config["concurrency"]["iterator_size"]).each do |product, iter|
         link(product)
       end
+    end
+    
+    def print message
+      @logger.debug message
+      @output.print message
+    end
+    def set_logger
+      logger = Logging.logger[self.class.name]
+      filename = File.expand_path(File.join(File.dirname(__FILE__),"../log/#{@options[:env]}.log"))
+      logger.add_appenders(
+        Logging.appenders.stdout,
+        Logging.appenders.file(filename)
+      )
+      logger.level = :debug
+      @logger = logger
+    end
+    def set_output output; @output = output; end
+    
+    private
+    
+    def define_workers
+      @price = StoragePrice.new "storage"
+      @shop_item = ShopItem.new "shop"
+      @storage_item = StorageItem.new "storage"
+      @storage_comparison = StorageComparison.new "storage"
+      @search_worker = SearchWorker.new @config["search"], @dictionary["search"] # <= пошук
     end
     def link(product)
       begin
@@ -163,22 +177,8 @@ module Mapper
       end
       shop_item_model.downcase == storage_item_model.downcase
     end
-    def set_logger
-      @logger = Logging.logger[self.class.name]
-      filename = '../log/development.log'
-      @logger.add_appenders(
-        Logging.appenders.stdout,
-        Logging.appenders.file(check_filename filename)
-      )
-      @logger.level = :debug
-    end
   end
 end
   
 require_relative 'PriceManager'
 require_relative 'PriceReader'
-
-#mapper = Mapper::Base.new
-#mapper.run
-
-
