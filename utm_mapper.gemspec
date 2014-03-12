@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'utm_mapper'
-  s.version     = '0.8.0'
+  s.version     = '0.1.1'
   s.licenses    = ['MIT']
   s.summary     = "Mapper summary"
   s.description = "Much longer explanation of summary"

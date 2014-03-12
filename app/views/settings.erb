@@ -1,0 +1,36 @@
+# settings from yaml file here
+<h1>Settings</h1>
+
+<%= @settings.inspect %>
+<% 
+  def each_option(option)
+    html = []
+    html << "<div>"
+    option.each do |key, value|
+      if value.is_a? String or value.is_a? Integer
+        html << "<label>#{key}</label>"
+        html << "<input type='text' name='#{key}' value='#{value}' />"
+        html << "<br />"
+      else
+        html << "<em>empty field</em>"
+      end
+    end
+    html << "<div>"
+    html.join
+  end
+%>
+
+<h2>Storage</h2>
+<%= each_option @settings["db"]["storage"] %>
+
+<h2>Shop</h2>
+<%= each_option @settings["db"]["shop"] %>
+
+<h2>Search</h2>
+<%= each_option @settings["search"] %>
+<%= each_option @settings["broker"] %>
+
+<%= each_option @settings["concurrency"] %>
+
+
+

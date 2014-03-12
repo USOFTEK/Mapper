@@ -5,7 +5,7 @@ describe "AMQP broker" do
   include EventedSpec::AMQPSpec
   
   default_timeout 10
-  let(:data) { "Rspec welcomes you!" }
+  let(:data) { {:foo => "Rspec welcomes you!"} }
 
   it "tests amqp broker" do
     AMQP::Channel.new do |channel|
@@ -13,8 +13,8 @@ describe "AMQP broker" do
       queue = channel.queue("test").bind(exchange)
       queue.subscribe do |hdr, msg|
         expect(hdr).to be_an AMQP::Header
-        expect(msg).to eq data
-        p data
+        expect(eval(msg)).to eq data
+        p msg
         done { queue.unsubscribe; queue.delete }
       end
       EM.add_timer(0.2) do

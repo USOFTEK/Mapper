@@ -14,7 +14,7 @@ require_relative File.expand_path(File.join(File.dirname(__FILE__),'../app/model
 require_relative File.expand_path(File.join(File.dirname(__FILE__),'../app/models/async/StoragePrice'))
 require_relative File.expand_path(File.join(File.dirname(__FILE__),'../app/models/async/StorageComparison'))
 require_relative File.expand_path(File.join(File.dirname(__FILE__),'../app/models/async/ShopItem'))
-require_relative 'WebServer'
+require_relative 'Webserver'
 
 module Mapper
   class Base
@@ -49,8 +49,6 @@ module Mapper
           print "AMQP started #{Time.now}"
           channel = AMQP::Channel.new connection
           queue = channel.queue(@config["broker"]["queue_name"], :auto_delete => true)
-          #exchange = channel.direct("amqp.default.exchange")
-          #queue.bind(exchange)
           queue.subscribe do |payload|
             print "Received message #{payload}"
             connection.close {EM.stop} if payload == "stop"
@@ -72,7 +70,7 @@ module Mapper
     # web-interface for price managment on localhost:4567
     def start_webserver
       stop_webserver
-      WebServer.run!
+      Webserver.run!
     end
     def stop_webserver
       system "fuser -k 4567/tcp"
@@ -178,6 +176,21 @@ module Mapper
         p e
       end
       shop_item_model.downcase == storage_item_model.downcase
+    end
+    def update_settings(new_data, *config)
+      raise ArgumentError, "new_data must be a hash!" unless new_data.kind_of? Hash
+      begin
+        if config
+          settings = YAML.load_file(config)
+        elsif @config
+          settings = @config
+        else
+          raise StandardError, "Yaml file with settings is not defined!"
+        end
+        File.open(settings, "w"){|f|f.write settings.merge(new_data).to_yaml}
+      rescue => e
+        p e
+      end
     end
   end
 end
