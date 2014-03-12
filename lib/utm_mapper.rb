@@ -21,7 +21,7 @@ module Mapper
     attr_reader :search_worker
     def initialize
       raise StandardError, "Mapper env is not defined!" if ENV['MAPPER_ENV'].nil?
-      @options = {:dir=>"../prices", :env => ENV['MAPPER_ENV']}
+      @options = {:env => ENV['MAPPER_ENV']}
       @working_dir = File.dirname(__FILE__)
       p "working dir #{@working_dir}"
       config_dir = File.expand_path(File.join(File.dirname(__FILE__), '../config'))

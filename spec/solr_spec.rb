@@ -26,7 +26,6 @@ describe 'Solr' do
         p "IS RUNNING? " + @solr.server_running?.to_s
         expect(@solr.server_running?).to be_true
         expect(@solr.get_total_docs).to be_a_kind_of Integer
-        expect(@solr.get_total_docs).to be > 0
         done
       }
     }

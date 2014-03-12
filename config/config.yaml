@@ -24,6 +24,7 @@ development:
         iterator_size: 4
     extensions: 
         - xlsx
+    dir: prices
 production: 
     db:
          storage:
@@ -50,4 +51,5 @@ production:
         iterator_size: 4
     extensions: 
         - xlsx
+    dir: prices
     
