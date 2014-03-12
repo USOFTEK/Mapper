@@ -3,7 +3,6 @@ class PriceManager < Mapper::Base
   attr_reader :dictionary
   def initialize
     super
-    p "Directory #{@config['dir']}"
   end
   #зчитуємо прайси з поточної директорії, якщо директорія не вказана
   # в налаштуваннях, інакше зчитуємо прайси з поточної директорії
@@ -27,6 +26,7 @@ class PriceManager < Mapper::Base
       print "Price #{filename} already exists in database!"
     end
   end
+  #парсить прайси з директорії вказаної в налаштуваннях та записує в базу
   def parse(filename, hash)
     EM.defer(
       proc {PriceReader.new(filename, @dictionary["headers"]).parse },
@@ -47,7 +47,6 @@ class PriceManager < Mapper::Base
       end
     )
   end
-  # приймає масив прайсів
   def load_prices
     filenames = get_price_names
     raise ArgumentError, "must be array of files #{filenames.kind_of?}" unless filenames.kind_of?(Array) 

@@ -39,7 +39,7 @@ module Mapper
     end
     
     public
-    
+    #runs reactor and starts amqp broker for receveing messages
     def run
       @output.print "Run, Forest, run!"
       
@@ -65,9 +65,11 @@ module Mapper
         end
       end
     end
+    # parse price-lists
     def start
       Fiber.new{PriceManager.new.load_prices}.resume
     end
+    # web-interface for price managment on localhost:4567
     def start_webserver
       stop_webserver
       WebServer.run!
@@ -101,7 +103,7 @@ module Mapper
         p e
       end
     end
-    # співставлення
+    # match products from parsed price-lists and products from online shop
     def match
       EM::Synchrony::FiberIterator.new(@storage_item.all, @config["concurrency"]["iterator_size"]).each do |product, iter|
         link(product)
@@ -165,7 +167,7 @@ module Mapper
         storage_item_title.include? shop_item_title
       end
     end
-    #порівняння моделей товарів
+    # compare two models from storage and shop databases
     def check_models(shop_item_model, storage_item_model)
       return false if (shop_item_model.nil? || shop_item_model.empty? || shop_item_model == "NULL") || (storage_item_model.empty? || storage_item_model.nil? || storage_item_model == "NULL")
       p "#{shop_item_model} - #{storage_item_model}"
