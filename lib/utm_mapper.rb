@@ -18,7 +18,7 @@ require_relative 'Webserver'
 
 module Mapper
   class Base
-    attr_reader :search_worker
+    attr_reader :search_worker, :config
     def initialize
       raise StandardError, "Mapper env is not defined!" if ENV['MAPPER_ENV'].nil?
       @options = {:env => ENV['MAPPER_ENV']}

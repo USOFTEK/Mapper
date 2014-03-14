@@ -1,36 +1,40 @@
 # settings from yaml file here
 <h1>Settings</h1>
 
-<%= @settings.inspect %>
+<pre><%= @settings %></pre>
 <% 
-  def each_option(option)
-    html = []
-    html << "<div>"
+  @html = []
+  def lookup_tree(option, path)
+    
     option.each do |key, value|
+      new_path = "#{path}_#{key}"
       if value.is_a? String or value.is_a? Integer
-        html << "<label>#{key}</label>"
-        html << "<input type='text' name='#{key}' value='#{value}' />"
-        html << "<br />"
-      else
-        html << "<em>empty field</em>"
+        build(key, value, new_path) 
+      elsif value.is_a? Hash or value.is_a? Array
+        lookup_tree(value, new_path)
       end
     end
-    html << "<div>"
-    html.join
+    @html.join
+  end
+  def build(key, value, path)
+     @html << "<label>#{path}</label>"
+     @html << "<input type='text' name='#{path}' data-path='#{path}' value='#{value}' />"
+     @html << "<br />"
   end
 %>
+<form id="settings" action="/settings/update" method="POST">
+<%= lookup_tree(@settings, ENV['MAPPER_ENV']); %>
+  <input type="submit" value="Submit" />
+</form>
 
-<h2>Storage</h2>
-<%= each_option @settings["db"]["storage"] %>
-
-<h2>Shop</h2>
-<%= each_option @settings["db"]["shop"] %>
-
-<h2>Search</h2>
-<%= each_option @settings["search"] %>
-<%= each_option @settings["broker"] %>
-
-<%= each_option @settings["concurrency"] %>
+<!-- script>
+  var obj = {};
+  $('#settings').on('submit', function(e){
+   e.preventDefault();
+   var data = $(this).serialize();
+   console.log(data);
+ });
+</script -->
 
 
 

@@ -13,25 +13,42 @@ module Mapper
     helpers do
       def send(where, what, *redirect)
         EM.run do
-        AMQP.connect do |connection|
-          puts "Send message: #{what}"
-          channel = AMQP::Channel.new connection
-          queue = channel.queue(where, :auto_delete => true)
-          exchange = channel.default_exchange
-          exchange.publish(what, :routing_key => queue.name)
-          EM.add_timer(1) {
-            p "AMQP Broker says bye!"
-            connection.close
-            redirect to(redirect) if redirect
-          }
+          AMQP.connect do |connection|
+            puts "Send message: #{what}"
+            channel = AMQP::Channel.new connection
+            queue = channel.queue(where, :auto_delete => true)
+            exchange = channel.default_exchange
+            exchange.publish(what, :routing_key => queue.name)
+            EM.add_timer(1) {
+              p "AMQP Broker says bye!"
+              connection.close
+              redirect to(redirect) if redirect
+            }
+          end
         end
       end
+      def path_to_hash(path, value)
+        arr = path.split("_") #["development", "db", "storage", "adapter"]
+        hashes = Array.new(arr.length) #[{}, {}]
+        hashes.fill(Hash.new)
+
+        arr.reverse.each_with_index do |item, index|
+          if index == 0
+            hashes[index][item] = value
+          else
+            hashes[index] = ""
+            hashes[index] = {}
+            hashes[index][item] = hashes[index - 1]
+          end
+        end
+        hashes.last
       end
     end
     get '/hello-world' do
-      request.path_info   # => '/hello-world'
-      request.fullpath    # => '/hello-world?foo=bar'
-      request.url         # => 'http://example.com/hello-world?foo=bar'
+      body {
+        "Url: #{request.url} \n Fullpath: #{request.fullpath} \n
+        Path-info: #{request.path_info}"
+      }
     end
     get '/' do
       @title = "Home"
@@ -58,12 +75,26 @@ module Mapper
       @settings = YAML.load_file(config)[ENV['MAPPER_ENV']]
       erb :settings
     end
-    post '/settings/update/:settings' do
-      settings = params[:settings]
-      p settings
+    post '/settings/update' do
+      # прислати тільки ті значення які змінились
+      config = File.expand_path(File.join(File.dirname(__FILE__), '../config/config.yaml'))
+      @settings = YAML.load_file(config)[ENV['MAPPER_ENV']]
+  
+      params.each do |key, value|
+        p "Path: #{key} - value#{value}"
+        new_data = path_to_hash(key, value)
+        p new_data
+        @settings = @settings.merge(new_data)
+      end
+      p "======================================="
+      p @settings
+      #p @settings
+      # пробігаємось по всіх значеннях і в циклі зєднюємо з хешом 
+      # Записуємо назад або пересилаємо
+      body {@settings.to_s}
       # 1. to hash
       # 2. send to mapper
-      send("rabbit.mapper", settings, "/settings")
+      #send("rabbit.mapper", settings, "/settings")
     end
   end
 end
