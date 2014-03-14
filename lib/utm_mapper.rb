@@ -177,17 +177,12 @@ module Mapper
       end
       shop_item_model.downcase == storage_item_model.downcase
     end
-    def update_settings(new_data, *config)
+    def update_settings(new_data, config)
       raise ArgumentError, "new_data must be a hash!" unless new_data.kind_of? Hash
+      raise StandardError, "Yaml file with settings is not defined!" unless config.is_a? String
       begin
-        if config
-          settings = YAML.load_file(config)
-        elsif @config
-          settings = @config
-        else
-          raise StandardError, "Yaml file with settings is not defined!"
-        end
-        File.open(settings, "w"){|f|f.write settings.merge(new_data).to_yaml}
+        settings = YAML.load_file(config)
+        File.open(config, "w"){|f|f.write settings.merge(new_data).to_yaml}
       rescue => e
         p e
       end

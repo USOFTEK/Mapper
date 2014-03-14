@@ -7,7 +7,7 @@
   def lookup_tree(option, path)
     
     option.each do |key, value|
-      new_path = "#{path}_#{key}"
+      new_path = "#{path}%#{key}"
       if value.is_a? String or value.is_a? Integer
         build(key, value, new_path) 
       elsif value.is_a? Hash or value.is_a? Array

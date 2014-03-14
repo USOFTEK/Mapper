@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'sinatra/async'
+require 'active_support'
 require_relative File.expand_path(File.join(File.dirname(__FILE__),'../app/models/Product'))
 module Mapper
   class Webserver < Sinatra::Base
@@ -28,7 +29,7 @@ module Mapper
         end
       end
       def path_to_hash(path, value)
-        arr = path.split("_") #["development", "db", "storage", "adapter"]
+        arr = path.split("%") #["development", "db", "storage", "adapter"]
         hashes = Array.new(arr.length) #[{}, {}]
         hashes.fill(Hash.new)
 
@@ -42,6 +43,15 @@ module Mapper
           end
         end
         hashes.last
+      end
+      def update_settings(new_data,config)
+        raise ArgumentError, "new_data must be a hash!" unless new_data.kind_of? Hash
+        raise StandardError, "Yaml file with settings is not defined!" unless config.is_a? String
+        begin
+          File.open(config, "w"){|f|f.write new_data.to_yaml}
+        rescue => e
+          p e
+        end
       end
     end
     get '/hello-world' do
@@ -78,16 +88,18 @@ module Mapper
     post '/settings/update' do
       # прислати тільки ті значення які змінились
       config = File.expand_path(File.join(File.dirname(__FILE__), '../config/config.yaml'))
-      @settings = YAML.load_file(config)[ENV['MAPPER_ENV']]
+      @settings = YAML.load_file(config)#[ENV['MAPPER_ENV']]
   
       params.each do |key, value|
         p "Path: #{key} - value#{value}"
         new_data = path_to_hash(key, value)
         p new_data
-        @settings = @settings.merge(new_data)
+        @settings = @settings.deep_merge(new_data)
       end
       p "======================================="
       p @settings
+      update_settings(@settings, config)
+      redirect to '/settings'
       #p @settings
       # пробігаємось по всіх значеннях і в циклі зєднюємо з хешом 
       # Записуємо назад або пересилаємо

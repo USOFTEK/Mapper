@@ -1,55 +1,55 @@
-development: 
-    db:
-         storage:
-            adapter: em_mysql2
-            active_adapter: mysql2
-            host: localhost
-            username: root
-            password: 238457
-            database: storage
-         shop:
-             adapter: em_mysql2
-             active_adapter: mysql2
-             host: localhost
-             username: root
-             password: 238457
-             database: shop
-    search:
-        host: http://localhost:8983/solr/mapper_development/
-    broker:
-        host: localhost:1234
-        queue_name: rabbit.mapper
-    concurrency: 
-        pool_size: 4
-        iterator_size: 4
-    extensions: 
-        - xlsx
-    dir: prices
-production: 
-    db:
-         storage:
-            adapter: em_mysql2
-            active_adapter: mysql2
-            host: localhost
-            username: root
-            password: password
-            database: storage
-         shop:
-             adapter: em_mysql2
-             active_adapter: mysql2
-             host: localhost
-             username: root
-             password: password
-             database: shop
-    search:
-        host: http://localhost:8983/solr/mapper_development/
-    broker:
-        host: localhost:1234
-        queue_name: rabbit.mapper
-    concurrency: 
-        pool_size: 4
-        iterator_size: 4
-    extensions: 
-        - xlsx
-    dir: prices
-    
+---
+development:
+  db:
+    storage:
+      adapter: em_mysql2
+      active_adapter: mysql2
+      host: localhost
+      username: root
+      password: '238457'
+      database: storage
+    shop:
+      adapter: em_mysql2
+      active_adapter: mysql2
+      host: localhost
+      username: root
+      password: '238457'
+      database: shop
+  search:
+    host: http://localhost:8983/solr/mapper_development/
+  broker:
+    host: localhost:1234
+    queue_name: rabbit.mapper
+  concurrency:
+    pool_size: '4'
+    iterator_size: '4'
+  extensions:
+  - xlsx
+  dir: prices
+production:
+  db:
+    storage:
+      adapter: em_mysql2
+      active_adapter: mysql2
+      host: localhost
+      username: root
+      password: password
+      database: storage
+    shop:
+      adapter: em_mysql2
+      active_adapter: mysql2
+      host: localhost
+      username: root
+      password: password
+      database: shop
+  search:
+    host: http://localhost:8983/solr/mapper_development/
+  broker:
+    host: localhost:1234
+    queue_name: rabbit.mapper
+  concurrency:
+    pool_size: 4
+    iterator_size: 4
+  extensions:
+  - xlsx
+  dir: prices
