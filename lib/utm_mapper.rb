@@ -103,7 +103,7 @@ module Mapper
     end
     # match products from parsed price-lists and products from online shop
     def match
-      EM::Synchrony::FiberIterator.new(@storage_item.all, @config["concurrency"]["iterator_size"]).each do |product, iter|
+      EM::Synchrony::FiberIterator.new(@storage_item.all, @config["concurrency"]["iterator_size"].to_i).each do |product, iter|
         link(product)
       end
     end

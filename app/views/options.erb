@@ -1,0 +1,13 @@
+<h1>Settings</h1>
+
+<form id="settings" action="<%= @action %>" method="<%= @method %>">
+  <%=  @options.to_xml(:root => @env); %>
+  <input type="submit" value="Submit" />
+  <input type="button" id="reset" value="Cancel" />
+</form>
+<script>
+    var settings = new Settings($('#settings'), {env: '<%= @env%>', split_sign: '<%= @split_sign%>' });
+</script>
+
+
+

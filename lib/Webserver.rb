@@ -10,6 +10,8 @@ module Mapper
       set :threaded, true
       set :root, File.expand_path(File.join(File.dirname(__FILE__),"../app/")) # <= TODO: for gem location
       set :public_folder, Proc.new { File.join(root, "assets") }
+      set :config,  File.expand_path(File.join(File.dirname(__FILE__), '../config/config.yaml'))
+      set :split_sign, "%"
     end
     helpers do
       def send(where, what, *redirect)
@@ -28,12 +30,20 @@ module Mapper
           end
         end
       end
+      def merge(settings, params)
+        params.each do |key, value|
+          new_data = path_to_hash(key, value)
+          settings = settings.deep_merge(new_data)
+        end
+        p settings
+        settings
+      end
       def path_to_hash(path, value)
-        arr = path.split("%") #["development", "db", "storage", "adapter"]
+        arr = path.split(settings.split_sign) #["development", "db", "storage", "adapter"]
         hashes = Array.new(arr.length) #[{}, {}]
         hashes.fill(Hash.new)
 
-        arr.reverse.each_with_index do |item, index|
+        arr.each_with_index do |item, index|
           if index == 0
             hashes[index][item] = value
           else
@@ -44,11 +54,11 @@ module Mapper
         end
         hashes.last
       end
-      def update_settings(new_data,config)
+      def update_settings(new_data)
         raise ArgumentError, "new_data must be a hash!" unless new_data.kind_of? Hash
-        raise StandardError, "Yaml file with settings is not defined!" unless config.is_a? String
+        raise StandardError, "Yaml file with settings is not defined!" unless settings.config.is_a? String
         begin
-          File.open(config, "w"){|f|f.write new_data.to_yaml}
+          File.open(settings.config, "w"){|f|f.write new_data.to_yaml}
         rescue => e
           p e
         end
@@ -81,32 +91,22 @@ module Mapper
       p Comparison.update(id, {:linked => linked}) unless linked.nil? or id.nil?
     end
     get '/settings' do
-      config = File.expand_path(File.join(File.dirname(__FILE__), '../config/config.yaml'))
-      @settings = YAML.load_file(config)[ENV['MAPPER_ENV']]
-      erb :settings
+      p settings.config
+      @env = ENV['MAPPER_ENV']
+      @action = "/settings/update"
+      @method = "POST"
+      @split_sign = settings.split_sign
+      @options = YAML.load_file(settings.config)[@env]
+      
+      erb :options
     end
     post '/settings/update' do
-      # прислати тільки ті значення які змінились
-      config = File.expand_path(File.join(File.dirname(__FILE__), '../config/config.yaml'))
-      @settings = YAML.load_file(config)#[ENV['MAPPER_ENV']]
-  
-      params.each do |key, value|
-        p "Path: #{key} - value#{value}"
-        new_data = path_to_hash(key, value)
-        p new_data
-        @settings = @settings.deep_merge(new_data)
-      end
-      p "======================================="
-      p @settings
-      update_settings(@settings, config)
+      redirect to '/settings' if params.empty?
+      options = YAML.load_file(settings.config)
+      new_settings = merge(options, params)
+      update_settings(new_settings)
+      
       redirect to '/settings'
-      #p @settings
-      # пробігаємось по всіх значеннях і в циклі зєднюємо з хешом 
-      # Записуємо назад або пересилаємо
-      body {@settings.to_s}
-      # 1. to hash
-      # 2. send to mapper
-      #send("rabbit.mapper", settings, "/settings")
     end
   end
 end

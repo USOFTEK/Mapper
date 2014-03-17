@@ -52,7 +52,7 @@ class PriceManager < Mapper::Base
     raise ArgumentError, "must be array of files #{filenames.kind_of?}" unless filenames.kind_of?(Array) 
     @price_count = filenames.size
     @counter = 0
-    EM::Synchrony::FiberIterator.new(filenames, @config["concurrency"]["iterator_size"]).map do |filename|
+    EM::Synchrony::FiberIterator.new(filenames, @config["concurrency"]["iterator_size"].to_i).map do |filename|
       check_price filename
     end
   end

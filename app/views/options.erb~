@@ -1,0 +1,32 @@
+# settings from yaml file here
+<h1>Settings</h1>
+
+<pre><%= @options %></pre>
+<% 
+  @html = []
+  def lookup_tree(option, path)
+    
+    option.each do |key, value|
+      new_path = "#{path}%#{key}"
+      if value.is_a? String or value.is_a? Integer
+        build(key, value, new_path) 
+      elsif value.is_a? Hash or value.is_a? Array
+        lookup_tree(value, new_path)
+      end
+    end
+    @html.join
+  end
+  def build(key, value, path)
+     @html << "<label>#{path}</label>"
+     @html << "<input type='text' name='#{path}' data-path='#{path}' value='#{value}' />"
+     @html << "<br />"
+  end
+%>
+<form id="settings" action="/options/update" method="POST">
+<%= lookup_tree(@options, ENV['MAPPER_ENV']); %>
+  <input type="submit" value="Submit" />
+</form>
+
+
+
+
