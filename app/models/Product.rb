@@ -17,7 +17,7 @@ class ActiveRecord::Base
     self.table_name_prefix = "#{db}."
     config = "../../config/config.yaml"
     @config = YAML.load_file(check_filename config)[environment]["db"][db]
-    @config["adapter"] = @config["active_adapter"]
+    @config["adapter"] = @config["active-adapter"]
     establish_connection @config
   end
 end

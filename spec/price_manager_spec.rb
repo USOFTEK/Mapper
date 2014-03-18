@@ -10,6 +10,7 @@ describe "PriceManager" do
     @dictionary = @pm.dictionary["headers"]
   end
   it 'checks prices existance' do
+    p @filenames
     expect(@filenames).to be_a_kind_of Array
     expect(@filenames.count).to be >= 1
     done

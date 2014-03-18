@@ -48,7 +48,7 @@ module Mapper
         AMQP.start do |connection|
           print "AMQP started #{Time.now}"
           channel = AMQP::Channel.new connection
-          queue = channel.queue(@config["broker"]["queue_name"], :auto_delete => true)
+          queue = channel.queue(@config["broker"]["queue-name"], :auto_delete => true)
           queue.subscribe do |payload|
             print "Received message #{payload}"
             connection.close {EM.stop} if payload == "stop"
@@ -103,7 +103,7 @@ module Mapper
     end
     # match products from parsed price-lists and products from online shop
     def match
-      EM::Synchrony::FiberIterator.new(@storage_item.all, @config["concurrency"]["iterator_size"].to_i).each do |product, iter|
+      EM::Synchrony::FiberIterator.new(@storage_item.all, @config["concurrency"]["iterator-size"].to_i).each do |product, iter|
         link(product)
       end
     end

@@ -8,8 +8,12 @@ class PriceManager < Mapper::Base
   # в налаштуваннях, інакше зчитуємо прайси з поточної директорії
   def get_price_names
     FileUtils.cd @config['dir'] if @config['dir'].nil? == false && Dir.exists?(@config['dir'])
-    extensions = @config["extensions"].join(",")
-    filenames = Dir.glob("*.{#{extensions}}")
+    filenames = []
+    p @config["extensions"].split(",")
+    @config["extensions"].split(",").each  do |extension|
+      extensions = Dir.glob("*.{#{extension.strip}}")
+      filenames.concat(extensions) unless extensions.empty?
+    end
     raise StandardError, "No prices in #{@config['dir']} directory :( " if filenames.count == 0
     filenames
   end
@@ -52,7 +56,7 @@ class PriceManager < Mapper::Base
     raise ArgumentError, "must be array of files #{filenames.kind_of?}" unless filenames.kind_of?(Array) 
     @price_count = filenames.size
     @counter = 0
-    EM::Synchrony::FiberIterator.new(filenames, @config["concurrency"]["iterator_size"].to_i).map do |filename|
+    EM::Synchrony::FiberIterator.new(filenames, @config["concurrency"]["iterator-size"].to_i).map do |filename|
       check_price filename
     end
   end
