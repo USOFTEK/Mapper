@@ -4,17 +4,13 @@ describe 'Solr' do
   include EventedSpec::SpecHelper
   include EventedSpec::EMSpec
   
-  default_timeout 600
+  default_timeout 100
   before :all do
     @start_delay = 0
   end
   it 'checks java' do
     stdin, stdout,stderr = Open3.popen3("java -version")
     expect(stderr.readlines[0]).to match /java version \"?1.[6-9]/
-    done
-  end
-  it 'checks solr path' do
-    expect(Dir.exists? '../solr/example/example-DIH/solr/').to be_true
     done
   end
   it 'search server is running' do
@@ -45,7 +41,7 @@ describe 'Solr' do
         if status == "idle"
           p "Ola! I've finished Full Import"
           p "status: #{status}"
-          expect(@solr.get_total_docs).to eq 69504
+          expect(@solr.get_total_docs).to be >= 50#eq 69504
           done
         else
           p "Full import in progress...I'm #{status}"
@@ -55,13 +51,13 @@ describe 'Solr' do
   end
   it 'matches products and stores in db' do
     expect(@solr.server_running?).to be_true
-    expect(Product.count).to eq 9854
-    expect(Price.count).to eq 5
+    #expect(Product.count).to eq 9854
+    expect(Price.count).to eq 2
     Comparison.delete_all
     expect(Comparison.count).to eq 0
     Fiber.new{@mapper.match}.resume
-    EM.add_timer(500){
-      expect(Comparison.count).to be >= 9000
+    EM.add_timer(10){
+      expect(Comparison.count).to be >= 50#9000
       done
     }
   end
