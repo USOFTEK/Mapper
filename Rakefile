@@ -22,9 +22,9 @@ end
 desc 'Test'
 task :spec, :arg do |t, args|
   (args[:arg].nil?) ? con = "*" : con = args[:arg]
+  p con
   RSpec::Core::RakeTask.new do |q|
     path = "../spec/#{con}_spec.rb"
-    p path
     q.pattern = FileList[path]
   end
 end

@@ -8,9 +8,8 @@ describe 'WebServer' do
   let(:host){'http://localhost'}
   let(:port){4567}
   
-  it 'runs webserver and checks main routes' do
-    EM.defer{@mapper.start_webserver}
-    EM.add_timer(1){
+  it 'checks main routes' do
+    EM.add_timer(2){
       ['/', '/link'].each do |path|
         req = EventMachine::HttpRequest.new("#{host}:#{port}#{path}").get
         req.callback {

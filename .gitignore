@@ -21,3 +21,5 @@ tmp
 _yardoc
 doc/
 nbproject
+.properties
+.gen
