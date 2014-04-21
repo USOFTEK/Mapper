@@ -1,2 +1,2 @@
-* {border: 1px solid blue;}
 #header {background-color: purple; color: white;}
+development *  {padding: 10px; margin: 10px; background: whitesmoke; border: 1px solid #ccc; float: left;}

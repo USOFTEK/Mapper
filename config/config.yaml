@@ -23,7 +23,7 @@ development:
   concurrency:
     iterator-size: '4'
     pool-size: '4'
-  extensions: csv
+  extensions: xlsx
   dir: prices
 production:
   db:
