@@ -16,5 +16,6 @@ source 'https://rubygems.org'
   gem "evented-spec"
   gem "rack"
   gem "rspec"
-  gem "codeclimate-test-reporter"
+  gem "rake-notes"
+  gem "zip-zip"
 

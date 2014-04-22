@@ -1,5 +1,6 @@
 require_relative 'lib/utm_mapper'
 require 'rspec/core/rake_task'
+require 'rake/notes/rake_task'
 
 FileUtils.cd 'lib/', :verbose => true
 @mapper = Mapper::Base.new
