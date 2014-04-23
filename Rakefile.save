@@ -5,11 +5,10 @@ require 'rdoc/task'
 
 FileUtils.cd 'lib/', :verbose => true
 @mapper = Mapper::Base.new
-
-RDoc::Task.new do |rdoc|
-  #rdoc.main = "README.rdoc"
-  rdoc.rdoc_files.include("lib/*.rb")
-end
+RDoc::Task.new do |rd|
+    rd.main = "README.rdoc"
+    rd.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+ end
 
 desc 'Run'
 task :run do

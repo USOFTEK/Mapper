@@ -18,4 +18,5 @@ source 'https://rubygems.org'
   gem "rspec"
   gem "rake-notes"
   gem "zip-zip"
+  gem "rdoc"
 

@@ -21,9 +21,8 @@ module Mapper
       count
       (flag) ? response.ok? : count
     end
-    #TODO: включити правильно delta-import
     def get_import_type
-      (get_total_docs) ? 'delta-import' : 'full-import'
+      #(get_total_docs) ? 'delta-import' : 'full-import'
       'full-import'
     end
     #індексування бази
