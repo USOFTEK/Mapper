@@ -22,4 +22,5 @@ _yardoc
 doc/
 nbproject
 *.properties
+.properties
 *.gen

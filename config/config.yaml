@@ -29,14 +29,14 @@ production:
   db:
     storage:
       adapter: em_mysql2
-      active_adapter: mysql2
+      active-adapter: mysql2
       host: localhost
       username: root
       password: password
       database: storage
     shop:
       adapter: em_mysql2
-      active_adapter: mysql2
+      active-adapter: mysql2
       host: localhost
       username: root
       password: password
@@ -45,10 +45,9 @@ production:
     host: http://localhost:8983/solr/mapper_development/
   broker:
     host: localhost:1234
-    queue_name: rabbit.mapper
+    queue-name: rabbit.mapper
   concurrency:
-    pool_size: 4
-    iterator_size: 4
-  extensions:
-  - xlsx
+    pool-size: 4
+    iterator-size: 4
+  extensions: csv,xlsx
   dir: prices
