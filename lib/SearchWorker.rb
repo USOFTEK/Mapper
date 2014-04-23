@@ -1,4 +1,5 @@
 require 'rsolr-ext'
+require 'active_support/core_ext'
 module Mapper
   class SearchWorker
     def initialize(config, dictionary)
@@ -46,7 +47,6 @@ module Mapper
       end
     end
     # екранування спец.символів які використовує Solr
-    #TODO: + AND OR && ||
     def escape str
       str.gsub(/[\/+\-!(){}\[\]^\"~\*?\\:]/) {|item| "\\#{item}"}
     end
@@ -68,7 +68,7 @@ module Mapper
       # 1. Визначити масив слів для віднімання
       # 2. Добавити знак мінус для слів у строці
       result = query.split(" ").map! do |word|
-        #word = word.downcase # TODO: downcase для українських та рос. слів
+        word = word.mb_chars.to_s
         matched = @dictionary.join(",").match(/#{word}/i)
         (matched) ?  word = "-#{word}" : word
       end
