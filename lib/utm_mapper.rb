@@ -88,9 +88,9 @@ module Mapper
       begin
         return false if @search_worker.server_running?
         stop_search_server
-        FileUtils.cd '../solr/example' do
+        FileUtils.cd '../solr/' do
           command = ["java"]
-          command << "-Dsolr.solr.home=./example-DIH/solr/"
+          #command << "-Dsolr.solr.home=./example-DIH/solr/"
           command << "-jar"
           command << "start.jar"
           pid = spawn(*command,:in=>'/dev/null',:err => :out)
@@ -143,7 +143,7 @@ module Mapper
           shop_product_id = shop_item["id"].to_i
           price_product_id = product["id"]
           p shop_item
-          linked = check_models(shop_item["model"], storage_item_model) || check_titles(shop_item["title"], product["title"])
+          linked = check_models(shop_item["model"][0], storage_item_model) || check_titles(shop_item["title"][0], product["title"])
           p "Linked: #{linked}"
           @storage_comparison.link(price_product_id, shop_product_id, linked).errback {|error|p error}
         else
@@ -153,7 +153,7 @@ module Mapper
         p e
       end
     end
-    #TODO: вдосконалити
+    #TODO: добавити порівняння Назва товару арт. [артикул] з моделлю
     def check_titles(shop_item_title, storage_item_title)
       shop_item_title.downcase!
       storage_item_title.downcase!

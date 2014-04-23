@@ -19,4 +19,4 @@ source 'https://rubygems.org'
   gem "rake-notes"
   gem "zip-zip"
   gem "rdoc"
-
+  gem 'thin'

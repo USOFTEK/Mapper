@@ -36,8 +36,8 @@ module Mapper
       begin
         host = 'localhost'
         port = '8983'
-        delete_path = '/solr/mapper_development/update?stream.body=<delete><query>*:*</query></delete>'
-        commit_path = '/solr/mapper_development/update?stream.body=<commit/>'
+        delete_path = '/solr/development/update?stream.body=<delete><query>*:*</query></delete>'
+        commit_path = '/solr/development/update?stream.body=<commit/>'
         delete_code = Net::HTTP.get_response(host, delete_path, port).code.to_i
         commit_code = Net::HTTP.get_response(host, commit_path, port).code.to_i
         (delete_code == 200 && commit_code == 200) ? true : false

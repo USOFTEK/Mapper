@@ -16,7 +16,7 @@ development:
       password: '238457'
       database: shop
   search:
-    host: http://localhost:8983/solr/mapper_development/
+    host: http://localhost:8983/solr/development/
   broker:
     host: localhost:1234
     queue-name: rabbit.mapper

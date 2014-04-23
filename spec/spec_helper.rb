@@ -3,7 +3,6 @@ require 'rspec/mocks'
 require 'evented-spec'
 require 'fiber'
 require 'open3'
-require "codeclimate-test-reporter"
 require 'em-http'
 
 RSpec.configure do |config|
