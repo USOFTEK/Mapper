@@ -90,7 +90,6 @@ module Mapper
         stop_search_server
         FileUtils.cd '../solr/' do
           command = ["java"]
-          #command << "-Dsolr.solr.home=./example-DIH/solr/"
           command << "-jar"
           command << "start.jar"
           pid = spawn(*command,:in=>'/dev/null',:err => :out)

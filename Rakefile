@@ -1,22 +1,16 @@
 require_relative 'lib/utm_mapper'
 require 'rspec/core/rake_task'
 require 'rake/notes/rake_task'
-require 'rdoc/task'
 
 FileUtils.cd 'lib/', :verbose => true
 @mapper = Mapper::Base.new
 
-RDoc::Task.new do |rdoc|
-  #rdoc.main = "README.rdoc"
-  rdoc.rdoc_files.include("lib/*.rb")
-end
-
-desc 'Run'
+desc 'Run mapper'
 task :run do
   @mapper.run
 end
 
-desc 'Setup storage'
+desc 'Setup storage database'
 task :setup_storage do
   @mapper.setup_storage
 end
@@ -36,7 +30,7 @@ task :spec, :arg do |t, args|
   end
 end
 
-desc 'Starts Solr'
+desc 'Start search server'
 task :start_solr do
   if @mapper.search_worker.server_running?
     @mapper.print "Solr is running"
@@ -45,15 +39,16 @@ task :start_solr do
   end
 end
 
-desc 'Stops Solr'
+desc 'Stop search server'
 task :stop_solr do
 	@mapper.stop_search_server if @mapper
 end
 
-desc 'starts webserver'
+desc 'Start web server'
 task :start_webserver do
   @mapper.start_webserver
 end
+desc 'Stop web server'
 task :stop_webserver do
   @mapper.stop_webserver
 end

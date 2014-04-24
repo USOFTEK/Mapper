@@ -7,7 +7,7 @@ describe "AMQP broker" do
   default_timeout 10
   let(:data) { {:foo => "Rspec welcomes you!"} }
 
-  it "tests amqp broker" do
+  it "amqp broker is working" do
     AMQP::Channel.new do |channel|
       exchange = channel.direct("amqp.default.exchange")
       queue = channel.queue("test").bind(exchange)
@@ -22,9 +22,9 @@ describe "AMQP broker" do
       end
     end
   end
-  it 'sends a message to amqp broker' do
+  it 'sends a message to amqp Mapper channel' do
     channel = AMQP::Channel.new
-    queue = channel.queue("rabbit.mapper", :auto_delete => true)
+    queue = channel.queue(@pm.config["broker"]["queue-name"], :auto_delete => true)
     exchange = channel.default_exchange
     exchange.publish(data, :routing_key => queue.name)
     delayed(0.2) do
