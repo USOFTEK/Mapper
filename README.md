@@ -41,18 +41,18 @@ After installation you have to start it with command
 <p>command <code>rake setup_storage</code> will install storage database and will create structure</p>
 
 <h2>Rake commands</h2>
-    <ul>
-        <li><b>rake spec</b> # &lt;= starts RSpec tests</li>
-        <li><b>rake start_solr</b> # &lt;= starts Solr</li>
-        <li><b>rake stop_solr</b> # &lt;= stops Solr</li>
-        <li><b>rake run</b> # &lt;= runs Mapper</li>
+<ul>
+    <li><b>rake spec</b> - starts RSpec tests</li>
+    <li><b>rake start_solr</b> - starts Solr</li>
+    <li><b>rake stop_solr</b> - stops Solr</li>
+    <li><b>rake run</b> - runs Mapper</li>
 </ul>
 <h2>Continuous Integration</h2>
-    <h3>TeamCity</h3>
-    <ul>
-        <li>home : /home/nychos/TeamCity</li>
-        <li>port: 8111</li>
-        <li>address: <b><a href="88.198.94.236:8111" target="_blank">88.198.94.236:8111</a></b></li>
-        <li>login: admin</li>
-        <li>password: uteam</li>
-   </ul>
+<h3>TeamCity</h3>
+<ul>
+    <li>home : /home/nychos/TeamCity</li>
+    <li>port: 8111</li>
+    <li>address: <b><a href="88.198.94.236:8111" target="_blank">88.198.94.236:8111</a></b></li>
+    <li>login: admin</li>
+    <li>password: uteam</li>
+</ul>
